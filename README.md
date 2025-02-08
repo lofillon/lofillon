@@ -1,6 +1,6 @@
 ## Bonjour/Hi/Buenos Aires 👋
 
-Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable<sup>1</sup>. 🤓
+Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable<sup>1</sup>.
 
 ### Mon expérience englobe
 - 📊 Science des données et Analytique d'affaires (XP : 6 mois)
@@ -21,7 +21,14 @@ Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compéten
 Au plaisir de discuter de tout!
 
 
-***<h5><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleusement consciencieuse. (blague de comptable pour les intimes)</h5>***
+***<h5><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleusement consciencieuse. (blague de comptable pour les intimes)</h5>*** 🤓
+
+## Data Science Wiki in Notion
+Au long de mon parcours j'ai toujours cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
+- Garder une trace écrite de ce que je fais qui est facilement accessible
+- Brainstormer, structurer mes idées et ma conception d'une matière, la consolider avec plusieurs sources
+
+Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets.
 
 ## Index des projets
 * Data visualization
