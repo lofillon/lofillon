@@ -67,8 +67,6 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - Data Pipeline pour la fonction analytique et tableaux de bord, Emprez
     - Data Pipeline TIA (Airflow,
     - Modélisation de la demande d'un commerce en ligne avec PySpark
-        - palantir/pyspark-style-guide https://github.com/palantir/pyspark-style-guide
-        - The Most Complete Guide to pySpark DataFrames https://readmedium.com/en/https:/medium.com/towards-data-science/the-most-complete-guide-to-pyspark-dataframes-2702c343b2e8
     - Modélisation de la base de données SQL de la SPVM (exercice pratique)
 - Deployment, DevOps, MLOps
     Industry Machine Learning
