@@ -15,7 +15,8 @@ Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, ave
 
 Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je prends ce github comme un pokédex de ma vie d'épicurien.\
 \
-***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.
+***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.\
+(mettre des extraits de morceaux avec titre "morceau en avant-première.wav" et maquette de la pochette/calligramme)
 
 \
 Au plaisir de discuter de tout!
@@ -24,9 +25,9 @@ Au plaisir de discuter de tout!
 ***<h5><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleusement consciencieuse. (blague de comptable pour les intimes) </h5>***
 
 ## Data Science Wiki in Notion
-Au long de mon parcours j'ai toujours cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
+Au long de mon parcours j'ai cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Garder une trace écrite de ce que je fais qui est facilement accessible
-- Brainstormer, structurer mes idées et ma conception d'une matière, la consolider avec plusieurs sources
+- Brainstormer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
 
 Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets.
 
