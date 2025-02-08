@@ -13,7 +13,7 @@ Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, ave
 
 Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je le prends comme un pokédex de ma vie d'épicurien.\
 \
-***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.\
+***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.
 <!--(mettre des extraits de morceaux avec titre "morceau en avant-première.wav" et maquette de la pochette/calligramme)-->
 
 \
