@@ -15,9 +15,11 @@ Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, ave
 Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je prends ce github comme un pokédex de ma vie d'épicurien.
 ***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.
 
+Au plaisir de discuter de tout et de rien (mais pas de nihilisme) :)
+
+
 *Pour autant l'équilibre comptable est maintenu grâce à un actif d'expertise financière et d'organisation méticuleuse. (blague de comptable pour les intimes)
 
-Au plaisir de discuter de tout et de rien (mais pas de nihilisme) :)
 
 ## Index des projets
 * Data visualization
