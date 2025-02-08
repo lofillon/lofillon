@@ -2,7 +2,7 @@
 
 Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable.<sup>1</sup> 🤓
 
-### Mon expérience englobe
+### Mon expérience englobe (CV link)
 - 📊 Science des données et Analytique d'affaires (XP : 6 mois)
 - 📚 Comptabilité, contrôle & audit (XP : 2 ans)
 - 👷🏻‍♂️ Entrepreneuriat (XP : 2 ans)
