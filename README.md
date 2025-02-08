@@ -1,4 +1,52 @@
-## Hi there 👋
+## Bonjour/Hi/Buenos Aires 👋
+
+Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable*. 🤓
+
+### Mon expérience englobe
+- 📊 Science des données et Analytique d'affaires (XP : 6 mois)
+- 📚 Comptabilité, contrôle & audit (XP : 2 ans)
+- 👷🏻‍♂️ Entrepreneuriat (XP : 2 ans)
+- 💡 Marketing (XP : quelques projets sporadiques et compétitions universitaires)
+   - Branding, campagnes publicitaires, rétention/acquisition de clients, charte graphique (direction artistique)
+   - Esprit créatif
+- 🔧 Résolution de problèmes variés
+- 🎸 Musique
+
+Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je prends ce github comme un pokédex de ma vie d'épicurien.
+***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.
+
+*Pour autant l'équilibre comptable est maintenu grâce à un actif d'expertise financière et d'organisation méticuleuse. (blague de comptable pour les intimes)
+
+Au plaisir de discuter de tout et de rien (mais pas de nihilisme) :)
+
+## Index des projets
+* Data visualization
+    * explore data
+    * communicate effectively
+* EDA
+    * will be done in detail in one of the ML projects
+* Data Collection
+    * API calls
+    * web scraping
+    * big data
+* Machine Learning / Deep learning
+    * supervised learning
+        * reg lin
+        * logistic regression
+        * Decision trees
+        * Ensembles (boosting)
+        * RVM/SVM
+    * Time series
+    * NN
+    * Reinforcement learning
+    * Anomaly detection
+    * Clustering
+* Data engineering
+    * pipelines
+* Deployment, DevOps, MLOps
+* projet artistique
+    * site web
+    * application
 
 <!--
 **lofillon/lofillon** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
