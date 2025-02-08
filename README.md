@@ -21,7 +21,7 @@ Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compéten
 Au plaisir de discuter de tout!
 
 
-***<h5><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleusement consciencieuse. (blague de comptable pour les intimes)</h5>*** 🤓
+***<h5><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleusement consciencieuse. (blague de comptable pour les intimes) 🤓 </h5>***
 
 ## Data Science Wiki in Notion
 Au long de mon parcours j'ai toujours cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
