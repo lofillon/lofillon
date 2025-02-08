@@ -9,7 +9,6 @@ Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, ave
 - 💡 Marketing (XP : quelques projets sporadiques et compétitions universitaires)
    - Branding, campagnes publicitaires, rétention/acquisition de clients, charte graphique (direction artistique)
    - Modélisation analytique reliée au marketing (voir projets ...)
-   - Esprit créatif
 - 🔧 Résolution de problèmes variés
 - 🎸 Musique
 
