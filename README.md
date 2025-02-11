@@ -36,6 +36,7 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place
     - Travail ADBM entreprise avec NDA sur Python
     - Tableau de bord avec Streamlit, Emprez
+    - Data pipeline avec Apache Spark et présentation
 - Data viz
     - will be done in detail in one of the ML projects, ref it
     - communicate effectively
@@ -45,38 +46,42 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - API calls
     - web scraping
     - big data PySpark
+- Data engineering
+    - Data Pipeline pour la fonction analytique et tableaux de bord, Emprez
+    - TIA Data pipeline avec Apache Spark et présentation
+    - Modélisation de la demande d'un commerce en ligne avec PySpark
+    - Modélisation de base de données SQL
 - Machine Learning / Deep learning
     - Machine Learning et IA Emprez  
     - RAG LLM pour documentation interne et help desk
         - déploiement de modèles d’IA locale optimisés avec LLaMA-Factory
     - 60629 Machine Learning I
-    - Classificateur d'imagerie aux rayons X avec PyTorch
-    - Projet Machine Learning git
     - supervised learning
         - reg lin
         - logistic regression
         - Decision trees
         - Ensembles (boosting)
         - RVM/SVM
+    - Clustering
     - Time series
+       - at least one
     - Neural networks
+       - X-ray classification using PyTorch
     - Reinforcement learning
     - Anomaly detection
-    - Clustering
-- Data engineering
-    - Data Pipeline pour la fonction analytique et tableaux de bord, Emprez
-    - Data Pipeline TIA (Airflow,
-    - Modélisation de la demande d'un commerce en ligne avec PySpark
-    - Modélisation de la base de données SQL de la SPVM (exercice pratique)
+       - Financial fraud detection using Gymnasium
+    
 - Deployment, DevOps, MLOps
     Industry Machine Learning
     Application Flask Calligram maker
     Docker, Kubernetes
      - images
+ 
 - projet artistique
     - **Web App Éditeur de calligrammes et site web commercial :** Flask, hosting/database, WebGL, OpenAI, Wordpress
     - site web
     - application
+
 
 <!--
 **lofillon/lofillon** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
