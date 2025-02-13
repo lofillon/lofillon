@@ -1,4 +1,4 @@
-## Bonjour/Hi/Buenos Aires 👋
+## Bonjour/Hi 👋
 
 Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable.<sup>1</sup> 🤓
 
