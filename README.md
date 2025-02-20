@@ -25,9 +25,9 @@ Au plaisir de discuter de tout!
 
 
 ## Data Science Notion Wiki (link)
-Au long de mon parcours j'ai cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
+Au long de mon parcours j'ai trouvé ludique l'idée d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Garder une trace écrite de ce que je fais qui est facilement accessible
-- Brainstormer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
+- Brainstormer, composer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
 
 Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets.
 \
