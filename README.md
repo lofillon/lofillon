@@ -21,17 +21,17 @@ Au plaisir de discuter de tout!
 
 
 ***<h6><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleuse. (blague de comptable pour les intimes) </h6>***
-/
-/
-/
+\
+\
+\
 ## Data Science Notion Wiki (link)
 Au long de mon parcours j'ai cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Garder une trace écrite de ce que je fais qui est facilement accessible
 - Brainstormer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
 
 Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets.
-/
-/
+\
+\
 ## Index des projets
 - Marketing/intelligence d’affaires
     - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place
