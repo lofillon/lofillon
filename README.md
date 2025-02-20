@@ -23,7 +23,7 @@ Au plaisir de discuter de tout!
 ***<h6><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleuse. (blague de comptable pour les intimes) </h6>***
 \
 \
-\
+
 ## Data Science Notion Wiki (link)
 Au long de mon parcours j'ai cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Garder une trace écrite de ce que je fais qui est facilement accessible
