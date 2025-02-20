@@ -34,13 +34,7 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
 
 ## Index des projets
 
-<table border="0">
- <tr>
-    <td><b style="font-size:30px">Title</b></td>
-    <td><b style="font-size:30px">Title 2</b></td>
- </tr>
- <tr>
-    <td>- Data engineering
+- Data engineering
     - TIA Data pipeline avec Apache Spark et présentation
     - Modélisation de la demande d'un commerce en ligne avec PySpark
             
@@ -51,8 +45,7 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - API calls
     - web scraping
     - big data PySpark
-     </td>
-    <td>
+
 - Marketing/intelligence d’affaires
     - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place
     - Data Mining sur jeu mobile avec Python, Réseau de neurones et Gradient boosting, 3è place
@@ -86,10 +79,6 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     Application Flask Calligram maker
     Docker, Kubernetes
      - images
-     </td>
- </tr>
-</table>
-
  
 - projet artistique
     - **Web App Éditeur de calligrammes et site web commercial :** Flask, hosting/database, WebGL, OpenAI, Wordpress
