@@ -2,7 +2,7 @@
 
 Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable.<sup>1</sup> 🤓
 
-### Mon expérience englobe (CV link)
+### Mon expérience englobe
 - 📊 Science des données et Analytique d'affaires (XP : 6 mois)
 - 📚 Comptabilité, contrôle & audit (XP : 2 ans)
 - 👷🏻‍♂️ Entrepreneuriat (XP : 2 ans)
@@ -33,15 +33,14 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
 \
 
 ## Index des projets
-- Marketing/intelligence d’affaires
-    - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place
-    - Data Mining sur jeu mobile avec Python, Réseau de neurones et Gradient boosting, 3è place
-    - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place
-    - Travail ADBM entreprise avec NDA sur Python
-    - Tableau de bord avec Streamlit, Emprez
-    - Data pipeline avec Apache Spark et présentation
 
-- Data engineering
+<table border="0">
+ <tr>
+    <td><b style="font-size:30px">Title</b></td>
+    <td><b style="font-size:30px">Title 2</b></td>
+ </tr>
+ <tr>
+    <td>- Data engineering
     - TIA Data pipeline avec Apache Spark et présentation
     - Modélisation de la demande d'un commerce en ligne avec PySpark
             
@@ -52,7 +51,16 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - API calls
     - web scraping
     - big data PySpark
-
+     </td>
+    <td>
+- Marketing/intelligence d’affaires
+    - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place
+    - Data Mining sur jeu mobile avec Python, Réseau de neurones et Gradient boosting, 3è place
+    - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place
+    - Travail ADBM entreprise avec NDA sur Python
+    - Tableau de bord avec Streamlit, Emprez
+    - Data pipeline avec Apache Spark et présentation
+   
 - Machine Learning / Deep learning
     - Machine Learning et IA Emprez  
     - RAG LLM pour documentation interne et help desk
@@ -73,11 +81,15 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - Anomaly detection
        - Financial fraud detection using Gymnasium
     
-- Deployment, DevOps, MLOps
+- Deployment, MLOps
     Industry Machine Learning
     Application Flask Calligram maker
     Docker, Kubernetes
      - images
+     </td>
+ </tr>
+</table>
+
  
 - projet artistique
     - **Web App Éditeur de calligrammes et site web commercial :** Flask, hosting/database, WebGL, OpenAI, Wordpress
