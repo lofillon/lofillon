@@ -22,7 +22,7 @@ Au plaisir de discuter de tout!
 
 ***<h6><sup>1</sup>L'équilibre comptable est toutefois maintenu grâce à un actif d'expertise financière et d'organisation pointilleuse. (blague de comptable pour les intimes) </h6>***
 
-## Data Science Wiki in Notion (link)
+## Data Science Notion Wiki (link)
 Au long de mon parcours j'ai cru important d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Garder une trace écrite de ce que je fais qui est facilement accessible
 - Brainstormer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
@@ -37,20 +37,20 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - Travail ADBM entreprise avec NDA sur Python
     - Tableau de bord avec Streamlit, Emprez
     - Data pipeline avec Apache Spark et présentation
-- Data viz
-    - will be done in detail in one of the ML projects, ref it
-    - communicate effectively
-- EDA
-    - will be done in detail in one of the ML projects
+
+- Data engineering
+    - TIA Data pipeline avec Apache Spark et présentation
+    - Modélisation de la demande d'un commerce en ligne avec PySpark
+            
+- Exploratory Data Analysis / Data visualization
+    - Chaque projet contient une section EDA détaillée. Voir les exemples les mieux détaillés ci-dessous
+      - 
+   
 - Data Collection
     - API calls
     - web scraping
     - big data PySpark
-- Data engineering
-    - Data Pipeline pour la fonction analytique et tableaux de bord, Emprez
-    - TIA Data pipeline avec Apache Spark et présentation
-    - Modélisation de la demande d'un commerce en ligne avec PySpark
-    - Modélisation de base de données SQL
+
 - Machine Learning / Deep learning
     - Machine Learning et IA Emprez  
     - RAG LLM pour documentation interne et help desk
@@ -82,7 +82,3 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
     - site web
     - application
 
-
-<!--
-**lofillon/lofillon** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
--->
