@@ -53,15 +53,18 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
       - Data Mining sur jeu mobile avec Réseau de neurones et Gradient boosting, 3è place (compétition en classe)
       - Jane Street Market Prediction, Kaggle
    - Regression
-   - Réduction de la dimension
+   - Réduction de la dimension et clustering
       - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place (compétition en classe)
+      - Segmentation de clients pour campagne de collecte de fonds avec Analyse factorielle et clustering
    - Détection d'anomalies
       - 
    - Estimation de la densité
    - Time Series
       - Forecasts
          - Walmart sales forecasting
-         - Forecasting sticker sales using 
+         - Forecasting sticker sales using
+      - Analyse de survie
+         - Entretien de machinerie avec Analyse de survie
    - Neural Networks
       - Ubiquant market prediction using a deep neural network and TensorFlow, Kaggle
    - Analyse de données non structurées
