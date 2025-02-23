@@ -33,21 +33,21 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
 
 
 
-## Index des projets
+# Index des projets
 
-- Data Engineering
+- ### Data Engineering
    - Harmful brain activity classification using PySpark, Kaggle
 
-- Data Collection
+- ### Data Collection
    - API calls contenus dans les projets suivants
       - Forecasting sticker sales (API call global GDP public dataset)
    - Web scraping contenu dans les projets suivants
 
-- Exploratory Data Analysis
+- ### Exploratory Data Analysis
    - Tous les projets contiennent une section EDA
    - Voici une liste de ceux qui sont les plus détaillés :
  
-- Machine Learning
+- ### Machine Learning
    - Classification
       - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place (compétition en classe) 
       - Data Mining sur jeu mobile avec Réseau de neurones et Gradient boosting, 3è place (compétition en classe)
@@ -57,7 +57,6 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
       - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place (compétition en classe)
       - Segmentation de clients pour campagne de collecte de fonds avec Analyse factorielle et clustering
    - Détection d'anomalies
-      - 
    - Estimation de la densité
    - Time Series
       - Forecasts
