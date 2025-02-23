@@ -24,7 +24,7 @@ Au plaisir de discuter de tout!
 \
 
 
-## Data Science Notion Wiki - ***WIP*** ([lien](https://indecisive-perch-4dc.notion.site/14ce95ec0bf54ffd9b9d5a0cadbfd36f?v=1a39d338e4da80039c8a000cda16733d)
+## Data Science Notion Wiki - ***WIP*** ([lien](https://indecisive-perch-4dc.notion.site/14ce95ec0bf54ffd9b9d5a0cadbfd36f?v=1a39d338e4da80039c8a000cda16733d))
 Au long de mon parcours j'ai trouvé ludique l'idée d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
 - Brainstormer, composer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
 - Garder une trace écrite de ce que je fais qui est facilement accessible
