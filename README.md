@@ -1,6 +1,6 @@
 ## Bonjour/Hi 👋
 
-Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable.<sup>1</sup> 🤓
+Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, avec un passif de comptable.<sup>1</sup>
 
 ### Mon expérience englobe
 - 📊 Science des données et Analytique d'affaires (XP : 6 mois)
