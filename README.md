@@ -34,25 +34,23 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
 
 
 # Index des projets
-
+<!--
 - ### Data Engineering
-   - Harmful brain activity classification using PySpark, Kaggle
 
 - ### Data Collection
    - API calls contenus dans les projets suivants
-      - Forecasting sticker sales (API call global GDP public dataset)
    - Web scraping contenu dans les projets suivants
 
 - ### Exploratory Data Analysis
    - Tous les projets contiennent une section EDA
    - Voici une liste de ceux qui sont les plus détaillés :
+-->
  
 - ### Machine Learning
    - Classification
       - [Envoi de catalogues pour campagne marketing](https://github.com/lofillon/lofillon/tree/main/Classification/EnvoiCatalogue_optimisation) avec R et Régression logistique, 4è place (compétition en classe) 
       - [Data Mining](https://github.com/lofillon/lofillon/tree/main/Classification/DataMining_NeuralNetwork) sur jeu mobile avec Réseau de neurones et Gradient boosting, 3è place (compétition en classe)
       - [Rétention de clients](https://github.com/lofillon/lofillon/tree/main/Classification/Churn_RandomForest) avec Forêt aléatoire, 1ère place (compétition en classe)
-      - Jane Street Market Prediction, Kaggle
    - Regression
    - Réduction de la dimension et clustering
       - [Segmentation de clients](https://github.com/lofillon/lofillon/tree/main/Clustering/Segmentation_Clustering_Marketing) pour campagne de collecte de fonds avec Analyse factorielle et clustering
@@ -60,13 +58,8 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
    - Estimation de la densité
    - Time Series
       - Forecasts
-         - Walmart sales forecasting
-         - Forecasting sticker sales using
       - Analyse de survie
          - [Entretien de machinerie](https://github.com/lofillon/lofillon/tree/main/TimeSeries/SurvivalAnalysis_Machinerie) avec Analyse de survie
    - Neural Networks
-      - Ubiquant market prediction using a deep neural network and TensorFlow, Kaggle
    - Analyse de données non structurées
-      - Tweet sentiment extraction using 
     
-- ML Ops
