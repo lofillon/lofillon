@@ -11,7 +11,7 @@ Mon nom est Louis, Louis Fillon. Je suis un passionné de sciences et d'art, ave
    - Modélisation analytique reliée au marketing (voir projets ...)
 - 🎸 Musique
 
-Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je le prends comme un pokédex de ma vie d'épicurien.\
+Vous pourrez trouver dans ce répertoire tout projet qui démontre mes compétences, ainsi que des petits goodies parce que je le prends comme un pokédex de ma vie d'épicurien.
 \
 ***Disclaimer*** : Il n'y aura quand même pas de nouveau morceau en avant-première dans le dossier Musique.
 <!--(mettre des extraits de morceaux avec titre "morceau en avant-première.wav" et maquette de la pochette/calligramme)-->
@@ -24,64 +24,42 @@ Au plaisir de discuter de tout!
 \
 
 
-## Data Science Notion Wiki (link)
+## Data Science Notion Wiki - ***WIP*** ([lien](https://indecisive-perch-4dc.notion.site/14ce95ec0bf54ffd9b9d5a0cadbfd36f?v=1a39d338e4da80039c8a000cda16733d)
 Au long de mon parcours j'ai trouvé ludique l'idée d'avoir un index de choses que je voulais retenir. J'y vois deux gros avantages :
-- Garder une trace écrite de ce que je fais qui est facilement accessible
 - Brainstormer, composer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
+- Garder une trace écrite de ce que je fais qui est facilement accessible
 
-Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets.
+Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets. Bien qu'il ne soit pas parfaitement documenté, j'espère à terme pouvoir le finir à l'aide d'une IA 
+
 \
 
 ## Index des projets
 
-- Data engineering
-    - TIA Data pipeline avec Apache Spark et présentation
-    - Modélisation de la demande d'un commerce en ligne avec PySpark
-            
-- Exploratory Data Analysis / Data visualization
-    - Chaque projet contient une section EDA détaillée. Voir les exemples les mieux détaillés ci-dessous
-   
+- Data Engineering
+   - Harmful brain activity classification using PySpark, Kaggle
+
 - Data Collection
-    - API calls
-    - web scraping
-    - big data PySpark
+   - API calls contenus dans les projets suivants
+   - Web scraping contenu dans les projets suivants
 
-- Marketing/intelligence d’affaires
-    - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place
-    - Data Mining sur jeu mobile avec Python, Réseau de neurones et Gradient boosting, 3è place
-    - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place
-    - Travail ADBM entreprise avec NDA sur Python
-    - Tableau de bord avec Streamlit, Emprez
-    - Data pipeline avec Apache Spark et présentation
-   
-- Machine Learning / Deep learning
-    - Machine Learning et IA Emprez  
-    - RAG LLM pour documentation interne et help desk
-        - déploiement de modèles d’IA locale optimisés avec LLaMA-Factory
-    - 60629 Machine Learning I
-    - supervised learning
-        - reg lin
-        - logistic regression
-        - Decision trees
-        - Ensembles (boosting)
-        - RVM/SVM
-    - Clustering
-    - Time series
-       - at least one
-    - Neural networks
-       - X-ray classification using PyTorch
-    - Reinforcement learning
-    - Anomaly detection
-       - Financial fraud detection using Gymnasium
-    
-- Deployment, MLOps
-    Industry Machine Learning
-    Application Flask Calligram maker
-    Docker, Kubernetes
-     - images
+- Exploratory Data Analysis
+   - Tous les projets contiennent une section EDA
+   - Voici une liste de ceux qui sont les plus détaillés :
  
-- projet artistique
-    - **Web App Éditeur de calligrammes et site web commercial :** Flask, hosting/database, WebGL, OpenAI, Wordpress
-    - site web
-    - application
-
+- Machine Learning
+   - Classification
+      - 
+   - Regression
+   - Réduction de la dimension
+   - Détection d'anomalies
+   - Estimation de la densité
+   - Time Series
+      - Forecasts
+         - Walmart sales forecasting
+   - Neural Networks
+      - Ubiquant market prediction using a deep neural network and TensorFlow, Kaggle
+   - Analyse de données non structurées
+      - Tweet sentiment extraction using 
+    
+- ML Ops
+   - 
