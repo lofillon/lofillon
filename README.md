@@ -29,7 +29,7 @@ Au long de mon parcours j'ai trouvé ludique l'idée d'avoir un index de choses 
 - Brainstormer, composer, structurer mes idées et la conception que je me fais d'une matière, la consolider avec plusieurs sources
 - Garder une trace écrite de ce que je fais qui est facilement accessible
 
-Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets. Bien qu'il ne soit pas parfaitement documenté, j'espère à terme pouvoir le finir à l'aide d'une IA 
+Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vues 5 ans auparavant en cours par exemple, mais aussi en proposant des pistes de départ pour pléthore de sujets. Bien qu'il ne soit pas encore terminé, je l'améliore continuellement et j'aimerais bien pouvoir le compléter un jour à l'aide d'une IA.
 
 \
 
@@ -40,6 +40,7 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
 
 - Data Collection
    - API calls contenus dans les projets suivants
+      - Forecasting sticker sales (API call global GDP public dataset)
    - Web scraping contenu dans les projets suivants
 
 - Exploratory Data Analysis
@@ -48,18 +49,22 @@ Ce wiki porte ses fruits en me permettant de revenir sur des choses que j'ai vue
  
 - Machine Learning
    - Classification
-      - 
+      - Envoi de catalogues publicitaires avec R et Régression logistique, 4è place (compétition en classe) 
+      - Data Mining sur jeu mobile avec Réseau de neurones et Gradient boosting, 3è place (compétition en classe)
+      - Jane Street Market Prediction, Kaggle
    - Regression
    - Réduction de la dimension
+      - Rétention de clients avec R, analyse factorielle et Forêt aléatoire, 1ère place (compétition en classe)
    - Détection d'anomalies
+      - 
    - Estimation de la densité
    - Time Series
       - Forecasts
          - Walmart sales forecasting
+         - Forecasting sticker sales using 
    - Neural Networks
       - Ubiquant market prediction using a deep neural network and TensorFlow, Kaggle
    - Analyse de données non structurées
       - Tweet sentiment extraction using 
     
 - ML Ops
-   - 
