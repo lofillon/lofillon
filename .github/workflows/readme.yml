@@ -14,24 +14,36 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
       # ISO Langusge Codes: https://cloud.google.com/translate/docs/languages  
       - name: Adding README - Chinese Simplified
         uses: dephraiim/translate-readme@main
         with:
           LANG: zh-CN
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
       - name: Adding README - Chinese Traditional
         uses: dephraiim/translate-readme@main
         with:
           LANG: zh-TW
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
       - name: Adding README - Hindi
         uses: dephraiim/translate-readme@main
         with:
           LANG: hi
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
       - name: Adding README - Arabic
         uses: dephraiim/translate-readme@main
         with:
           LANG: ar
-      - name: Adding README - French
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      - name: Adding README - English
         uses: dephraiim/translate-readme@main
         with:
-          LANG: fr
+          LANG: en
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
