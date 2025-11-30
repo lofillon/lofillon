@@ -26,6 +26,7 @@ Au plaisir de discuter de tout!
 
 - ### Data Collection
    - API calls contenus dans les projets suivants
+      - Book recommendation system using Wikipedia referenced books (collect the wikipedia articles)
    - Web scraping contenu dans les projets suivants
 
 - ### Exploratory Data Analysis
