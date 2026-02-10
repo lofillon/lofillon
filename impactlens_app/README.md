@@ -1,6 +1,6 @@
-# ImpactLens
+# Module for analysis, robustness assessment, and reporting based on structured and unstructured data (on public World Bank projects)
 
-ImpactLens is a local analytics and reporting module designed to transform messy, mixed-format program data into decision-ready outputs. It combines structured metadata (e.g., project records) with unstructured evidence (PDF reports, annexes, and scanned documents) to extract key facts, summarize outcomes, and produce standardized reports—while enforcing quality assurance and evidence grounding to minimize inconsistencies and hallucinations.
+This project, named ImpactLens for simplicity reasons, is a local analytics and reporting module designed to transform messy, mixed-format program data into decision-ready outputs. It combines structured metadata (e.g., project records) with unstructured evidence (PDF reports, annexes, and scanned documents) to extract key facts, summarize outcomes, and produce standardized reports—while enforcing quality assurance and evidence grounding to minimize inconsistencies and hallucinations.
 
 ## What you get
 
