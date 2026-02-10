@@ -13,7 +13,7 @@
 % --- Math ---
 \usepackage{amsmath,amssymb,amsthm}
 
-% --- Figures & tableaux ---
+% --- Figures & tables ---
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{array}
@@ -86,7 +86,7 @@ La question de recherche qui guide ce travail peut ainsi être formulée :
 
 En répondant à cette question dans un cadre structurel (sans modélisation détaillée de flux ou de dynamiques temporelles), il s'agit d'évaluer si la distance de résistance et l'indice de Kirchhoff offrent une lecture complémentaire de la criticité, et dans quels types de structures (réseaux maillés, arborescents, hybrides) cette lecture apporte une valeur ajoutée tangible par rapport aux outils existants.
 
-\section{Literature review and related work}
+\section{Revue de littérature et travaux connexes}
 
 Les recherches sur la résilience des chaînes d'approvisionnement et le Supply Chain Risk Management (SCRM) mobilisent largement des métriques classiques et des modèles de performance, tandis que les outils issus de la résistance effective (distance de résistance, indice de Kirchhoff) restent rarement formulés comme indicateurs centraux de criticité en SCRM appliqué aux réseaux de supply chain. Les approches dominantes s'appuient plutôt sur (i) des indicateurs opérationnels (niveau de service, temps de récupération, coûts) et (ii) des métriques d'analyse de réseau social (Social Network Analysis, SNA), en particulier les centralités de nœuds, souvent combinées à des analyses de scénarios \citep{HosseiniShekarabi2025}.
 Dans cette perspective \og réseau \fg{}, plusieurs travaux fondateurs ont contribué à installer l'idée que la vulnérabilité est systémique et dépend de la topologie (concentration, redondance, modularité), en particulier dans les lectures \og complex adaptive systems \fg{} des supply networks \citep{Surana2005,Thadakamalla2004}.
@@ -99,7 +99,7 @@ Dans ce cadre, la résilience est généralement comprise comme la capacité à 
 Un point important pour la suite est que, même lorsque les méthodes sont très riches du point de vue décisionnel (politiques de sourcing, stocks tampon, replanification), la dimension topologique du réseau (redondance structurelle, présence de ponts, maillage) est souvent traitée de manière indirecte ou via quelques métriques classiques, plutôt que via une mesure unifiée de \og connectivité effective \fg{} \citep{Bento2024,BellamyBasole2013,BasoleBellamy2014,HosseiniShekarabi2025}.
 
 \subsection{Approches par graphe pour les chaînes d'approvisionnement}
-La représentation des supply chains sous forme de graphes s'est imposée comme une alternative au schéma linéaire \og fournisseur $\rightarrow$ usine $\rightarrow$ entrepôt $\rightarrow$ client \fg{}. Dans cette perspective, les centralités issues de la SNA sont devenues des outils standards pour repérer des acteurs \og importants \fg{} : degré, proximité (closeness), intermédiarité (betweenness), autovecteur, PageRank, etc. Une revue récente souligne la place dominante de ces métriques dans les études de SNA appliquées au Supply Chain Management \citep{Bento2024}.
+La représentation des supply chains sous forme de graphes s'est imposée comme une alternative au schéma linéaire \og fournisseur $\rightarrow$ usine $\rightarrow$ entrepôt $\rightarrow$ client \fg{}. Dans cette perspective, les centralités issues de la SNA sont devenues des outils standards pour repérer des acteurs \og importants \fg{} : degré, proximité (closeness), intermédiarité (betweenness), eigenvector, PageRank, etc. Une revue récente souligne la place dominante de ces métriques dans les études de SNA appliquées au Supply Chain Management \citep{Bento2024}.
 Cette évolution est également documentée dans des revues systématiques qui articulent structure de réseau, visibilité et diffusion du risque \citep{BellamyBasole2013,BasoleBellamy2014}.
 
 Ces mesures ont des avantages clairs : elles sont interprétables, faciles à calculer, et permettent de détecter des hubs ou des \og ponts \fg{} susceptibles de concentrer le risque. Cependant, elles reposent souvent sur des logiques locales (degré) ou plus-court-chemin (betweenness/closeness), ce qui peut sous-estimer le rôle de la multiplicité des itinéraires et la redondance globale du réseau.
@@ -132,7 +132,7 @@ Ce point est particulièrement pertinent pour des réseaux logistiques tels que 
 \subsection{Synthèse et positionnement du travail}
 En synthèse, la littérature SCRM mobilise largement des métriques de centralité et des modèles de propagation/robustesse, mais les mesures fondées sur la connectivité effective (distance de résistance, indice de Kirchhoff) sont plus souvent développées et discutées dans la littérature \og infrastructures \fg{} que formulées comme indicateurs de criticité dans la littérature SCRM centrée supply chain. Dans ce contexte, ce rapport se positionne comme une contribution méthodologique : formaliser un cadre résistif pour réseaux logistiques, définir des métriques associées, puis comparer systématiquement leur capacité à repérer des nœuds critiques par rapport aux centralités classiques, y compris sur un cas de réseau de transport réel.
 
-\section{Problem formulation}
+\section{Formulation du problème}
 
 \subsection{Modélisation du réseau de supply chain comme graphe}
 Nous représentons une chaîne d'approvisionnement (ou plus généralement un réseau logistique) sous la forme d'un graphe pondéré
@@ -228,7 +228,7 @@ Ces métriques sont largement utilisées pour identifier des éléments \og impo
   \item centralité de degré $C_{\mathrm{deg}}(v)$ (éventuellement pondérée),
   \item centralité d'intermédiarité $C_{\mathrm{bet}}(v)$,
   \item centralité de proximité $C_{\mathrm{clo}}(v)$,
-  \item centralité d'autovecteur $C_{\mathrm{eig}}(v)$.
+  \item centralité eigenvector $C_{\mathrm{eig}}(v)$.
 \end{itemize}
 Elles capturent des aspects locaux (degré) ou basés sur les plus courts chemins (betweenness/closeness).
 
@@ -287,7 +287,7 @@ Concrètement, il s'agira :
 
 Cette formulation fournit un cadre mathématique explicite pour les développements suivants : définition opérationnelle de $r_{ij}$, calcul de $R(u,v)$ et $\bar K(G)$, instanciation d'une référence $\Delta R$ non circulaire, puis comparaison systématique des métriques sur des réseaux jouets, des réseaux synthétiques, et un cas d'étude empirique (réseau portuaire).
 
-\section{Resistance-distance-based model}
+\section{Modèle basé sur la distance de résistance}
 
 \subsection{Encodage des poids d'arêtes en résistances logistiques}
 Pour exploiter la distance de résistance dans un contexte de supply chain, le réseau logistique est interprété comme un graphe résistif : chaque arête $(i,j)\in E$ est associée à une résistance logistique $r_{ij}>0$ qui représente la \og difficulté \fg{} structurelle de relier $i$ et $j$ (au sens d'itinéraires disponibles, qualité moyenne des liaisons, redondance implicite), sans modéliser explicitement des flux dynamiques.
@@ -424,7 +424,7 @@ L'objectif expérimental est de comparer des classements de criticité nodale pr
 
 Deux niveaux sont considérés, correspondant aux scripts fournis dans le codebase.
 \begin{enumerate}
-  \item Graphes jouets (contrôlés). Afin d'isoler des mécanismes topologiques simples (ponts, redondance, cycles, goulots, hubs), un petit ensemble de graphes jouets non orientés, de taille réduite, est utilisé et analysé avec exactement le même pipeline que le graphe réel (métriques + vérité \og neutral \fg{} + tableaux).
+  \item Graphes jouets (contrôlés). Afin d'isoler des mécanismes topologiques simples (ponts, redondance, cycles, goulots, hubs), un petit ensemble de graphes jouets non orientés, de taille réduite, est utilisé et analysé avec exactement le même pipeline que le graphe réel (métriques + vérité \og neutral \fg{} + fichiers CSV exportés).
 
   \item Cas d'étude empirique (réseau portuaire). Un graphe port-port agrégé est construit à partir du fichier \texttt{port\_trade\_network.csv}. Le graphe est construit en agrégeant, pour chaque couple \texttt{(iso3\_O, iso3\_D, Industries)}, les parts des ports exportateurs et importateurs et en appariant export$\times$import de façon proportionnelle (produit extérieur), puis en sommant sur tous les OD/industries. Les arêtes sont pondérées par une intensité de flux (\texttt{tonnes} ou \texttt{value}) et converties en conductances/résistances (Section~4).
   La source des données est le dataset Mendeley Data \og Global port supply-chains \fg{} \citep{VerschuurDataset2022} (licence CC BY 4.0).
@@ -498,7 +498,8 @@ L'analyse est reproductible via des scripts dédiés :
   \item \texttt{run\_ports\_tables.py} : construction du graphe portuaire, calcul des métriques, calcul de la vérité \og neutral \fg{} sur un sous-ensemble, et export des tables CSV.
   \item \texttt{run\_toys\_tables.py} : exécution du même pipeline sur les graphes jouets.
 \end{itemize}
-Les dépendances sont listées dans \texttt{requirements.txt} (notamment \texttt{networkx}, \texttt{numpy}, \texttt{pandas}, \texttt{scipy}). Les scripts exposent des paramètres (seeds, tailles d'échantillons, seuils de filtrage) afin de contrôler le compromis coût/qualité. Les sorties principales sont des fichiers CSV contenant (i) les métriques par nœud, (ii) la table des nœuds évalués avec leur vérité de référence, et (iii) les tableaux Spearman et top-$k$ utilisés ensuite dans la section Résultats.
+Les dépendances sont listées dans \texttt{requirements.txt} (notamment \texttt{networkx}, \texttt{numpy}, \texttt{pandas}, \texttt{scipy}). Les scripts exposent des paramètres (seeds, tailles d'échantillons, seuils de filtrage) afin de contrôler le compromis coût/qualité. Les sorties principales sont des fichiers CSV contenant (i) les métriques par nœud, (ii) la table des nœuds évalués avec leur vérité de référence, et (iii) les fichiers CSV exportés des résultats Spearman et top-$k$ utilisés ensuite dans la section Résultats.
+Les résultats numériques détaillés (Spearman, top-$k$) sont disponibles dans les CSV générés par les scripts.
 
 \paragraph{Paramètres utilisés pour le cas réel sur les ports.}
 Sauf mention contraire, les valeurs par défaut de \texttt{run\_ports\_tables.py} sont utilisées (poids \texttt{tonnes}, \texttt{top\_n\_ports}=2000, \texttt{min\_edge\_flow}=0, \texttt{seed}=0, plus courts chemins en mode \texttt{cost}). Le run nominal présenté dans la section Résultats fixe en particulier : \texttt{betw\_k\_sample}=120, \texttt{ref\_top\_degree}=120, \texttt{ref\_top\_betw}=120, \texttt{ref\_max}=180, \texttt{n\_sources}=12.
@@ -520,7 +521,7 @@ $$
 tandis que le degré est non informatif dans ce cas (corrélation négative faible). Ces résultats indiquent que, sur ce réseau et avec ce mapping de poids, la distance de résistance apporte un signal crédible mais ne domine pas systématiquement une baseline directement liée aux flux.
 
 \paragraph{Chevauchement top-$k$ (cible $\Delta\mathrm{Eff}$).}
-Le chevauchement top-$k$ complète la lecture \og corrélation globale \fg{} en évaluant la qualité des premières positions du classement. Pour $k=25$ et $k=50$, strength et $C_{\mathrm{cf\text{-}clo}}$ atteignent un chevauchement $\approx 0.76$ et $\approx 0.78$ avec les nœuds les plus critiques selon $\Delta\mathrm{Eff}$. La betweenness présente un très bon chevauchement à $k=25$ ($\approx 0.80$) mais une corrélation globale plus faible, ce qui est cohérent avec une métrique particulièrement sensible aux \og goulots \fg{} sans nécessairement ordonner finement les impacts continus sur l'ensemble des nœuds. Les valeurs exactes sont reportées dans les tableaux exportés.
+Le chevauchement top-$k$ complète la lecture \og corrélation globale \fg{} en évaluant la qualité des premières positions du classement. Pour $k=25$ et $k=50$, strength et $C_{\mathrm{cf\text{-}clo}}$ atteignent un chevauchement $\approx 0.76$ et $\approx 0.78$ avec les nœuds les plus critiques selon $\Delta\mathrm{Eff}$. La betweenness présente un très bon chevauchement à $k=25$ ($\approx 0.80$) mais une corrélation globale plus faible, ce qui est cohérent avec une métrique particulièrement sensible aux \og goulots \fg{} sans nécessairement ordonner finement les impacts continus sur l'ensemble des nœuds. Les valeurs exactes sont disponibles dans les fichiers CSV exportés.
 
 \paragraph{Contrôle par sparsification (stress test modéré).}
 Pour vérifier la stabilité des résultats dans un graphe moins dense, un scénario de sparsification a été exécuté (\texttt{top\_n\_ports}=500, \texttt{min\_edge\_flow}=500). Dans ce scénario, $\Delta\mathrm{ConnPairs}$ reste constant (déconnexion toujours rare), mais les corrélations vs $\Delta\mathrm{Eff}$ restent qualitativement similaires : \(\rho_s(\mathrm{strength},\Delta\mathrm{Eff})\approx 0.85\) et \(\rho_s(C_{\mathrm{cf\text{-}clo}},\Delta\mathrm{Eff})\approx 0.85\). Cette cohérence renforce l'interprétation principale : la current-flow closeness se comporte comme une alternative robuste à strength pour capturer une fragilité continue.

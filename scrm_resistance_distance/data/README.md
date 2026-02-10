@@ -13,6 +13,6 @@ Télécharger le dataset et placer le fichier suivant dans le dépôt :
 
 - `Global port supply-chains/Port_to_port_network/port_trade_network.csv`
 
-Ce fichier n'est pas poussé sur GitHub car il dépasse 100 MB.
+Ce fichier n'est pas poussé sur GitHub car il dépasse 100 Mo.
 
 
