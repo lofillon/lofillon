@@ -375,7 +375,7 @@ def main() -> None:
 
     with st.sidebar:
         st.link_button("Help", settings.github_readme_url, use_container_width=True)
-        st.caption("Opens the README on GitHub.")
+        st.caption("Opens the analysis & interpretation guide on GitHub.")
         st.divider()
 
         st.subheader("Run configuration")

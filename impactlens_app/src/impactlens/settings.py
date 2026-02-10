@@ -19,8 +19,11 @@ class Settings(BaseSettings):
     http_timeout_s: float = 60.0
 
     # UI / docs
-    # Override with IMPACTLENS_GITHUB_README_URL if your repo differs.
-    github_readme_url: str = "https://github.com/lapin/ImpactLens/blob/main/README.md"
+    # Override with IMPACTLENS_GITHUB_README_URL if your doc URL differs.
+    github_readme_url: str = (
+        "https://github.com/lofillon/lofillon/blob/main/impactlens_app/How_to_analyse_and_interpret.md"
+        "#impactlens--analysis-method-and-limitations-evidence-grounded-llm--ocr"
+    )
 
 
 settings = Settings()

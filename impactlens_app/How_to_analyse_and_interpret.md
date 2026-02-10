@@ -9,6 +9,34 @@ This document explains:
 
 ---
 
+## Streamlit UI — tweakable parameters
+
+The Streamlit UI (`src/impactlens/ui/streamlit_app.py`) exposes a set of sidebar inputs you can change to control what gets fetched/processed and how much context the extractor sees.
+
+### Run identifiers
+
+- Project ID: World Bank project identifier (e.g., `P131765`).
+- Dataset version (YYYY-MM-DD): logical run/version id used to separate outputs under `data/…`.
+
+### WDS ingestion
+
+- rows: how many document records to request from the World Bank WDS API.
+- max_pages: pagination depth for WDS queries.
+
+### Selection & processing
+
+- top_k_docs: how many top-ranked documents to select for the project.
+- docs_limit (download/OCR cap): maximum number of PDFs to download/process.
+- Process all project documents: if enabled, processes the full set (slower, more complete).
+- ocr_min_total_chars: threshold controlling how aggressively OCR fallback is applied when extracted text is short.
+
+### LLM extraction
+
+- max_chunks: maximum number of evidence chunks passed into extraction.
+- Analysis mode (`fast` / `full`): speed/coverage trade-off.
+
+---
+
 ## Data sources and why “mismatches” happen
 
 ImpactLens is commonly used with World Bank project records, which are generally trustworthy. Still, it is normal to encounter fields that look “wrong” for analysis—not because they’re intentionally false, but because they are stale, incomplete, or inconsistent across sources.
@@ -85,31 +113,31 @@ This turns the output into something you can treat as:
 
 ## The pipeline’s actual “analysis” steps (conceptual)
 
-1. **Scope**
+1. Scope
    
    Pick a project (or set of projects) and assemble its relevant public documents.
 
-2. **Rank/select documents**
+2. Rank/select documents
    
    Prefer high-signal doc types (implementation reports, results frameworks, PAD/ISR/ICR-style docs). The goal is to reduce noise and focus on documents likely to contain indicators and performance reporting.
 
-3. **Extract evidence chunks from PDFs**
+3. Extract evidence chunks from PDFs
    
    Convert PDFs into page-level (or chunk-level) text, using OCR fallback for scanned content. This creates an “evidence corpus” per project.
 
-4. **Prioritize informative chunks**
+4. Prioritize informative chunks
    
    Focus on pages likely to contain indicator tables, numeric targets, key dates, and “results section” content (conceptually: information density).
 
-5. **LLM-based structured extraction**
+5. LLM-based structured extraction
    
    Use a locally hosted LLM to populate a strict schema using only the provided evidence chunks, producing a JSON fact set.
 
-6. **Grounding and consistency checks**
+6. Grounding and consistency checks
    
    Validate that citations are supported by the evidence chunks; flag missing citations or unsupported quotes.
 
-7. **Decision-ready report generation**
+7. Decision-ready report generation
    
    Render the fact set into a readable report for humans, preserving “not confirmed” markings where appropriate.
 
