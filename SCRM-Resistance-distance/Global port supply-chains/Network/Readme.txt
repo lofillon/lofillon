@@ -1,1 +1,0 @@
-The maritime nodes and edges used to construct the maritime transport network

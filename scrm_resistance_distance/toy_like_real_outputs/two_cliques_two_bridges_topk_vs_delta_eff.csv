@@ -1,0 +1,16 @@
+metric,k,topk_overlap
+degree,12,1.0
+degree,12,1.0
+degree,12,1.0
+strength,12,1.0
+strength,12,1.0
+strength,12,1.0
+betweenness,12,1.0
+betweenness,12,1.0
+betweenness,12,1.0
+eigenvector,12,1.0
+eigenvector,12,1.0
+eigenvector,12,1.0
+cf_closeness,12,1.0
+cf_closeness,12,1.0
+cf_closeness,12,1.0

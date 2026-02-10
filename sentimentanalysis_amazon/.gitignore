@@ -1,0 +1,15 @@
+# Data (downloaded / generated)
+data/raw/
+data/processed/
+
+# Results / exports
+results/*
+!results/README.md
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+

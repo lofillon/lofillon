@@ -1,0 +1,6 @@
+metric,spearman_rho
+degree,1.0
+strength,1.0
+betweenness,1.0
+cf_closeness,0.8944271909999161
+eigenvector,0.8280786712108252

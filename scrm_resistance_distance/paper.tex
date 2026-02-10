@@ -1,0 +1,627 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Encodage & langue ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+
+% --- Mise en page ---
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{microtype}
+
+% --- Math ---
+\usepackage{amsmath,amssymb,amsthm}
+
+% --- Figures & tableaux ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+
+% --- Liens ---
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,capitalize]{cleveref}
+
+% --- Bibliographie (simple, compatible BibTeX) ---
+\usepackage[numbers,sort&compress]{natbib}
+
+% --- Sauts de page : chaque section commence sur une nouvelle page ---
+\usepackage{etoolbox}
+\pretocmd{\section}{\clearpage}{}{}
+
+% --- Environnements de théorèmes ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Théorème}
+\newtheorem{lemma}{Lemme}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollaire}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}
+\newtheorem{example}{Exemple}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}
+
+% --- Métadonnées ---
+\title{Distance de résistance et criticité des nœuds dans les réseaux de supply chain : comparaison aux centralités classiques en SCRM}
+\author{Travail réalisé par \\ Louis Fillon \\ Étudiant à la M.Sc. en Intelligences d'affaires}
+\date{\today}
+
+\renewcommand{\abstractname}{Résumé}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Les métriques de criticité utilisées en Supply Chain Risk Management reposent souvent sur des centralités classiques (degré, betweenness, eigenvector) et sur des notions liées aux plus courts chemins. Ce rapport évalue dans quelle mesure des métriques basées sur la distance de résistance, qui agrège l'ensemble des chemins et capture une forme de redondance multi-itinéraires, apportent une lecture complémentaire de la fragilité structurelle des nœuds. La comparaison est conduite dans un cadre d'analyse centré sur les nœuds, sur des graphes jouets et sur un graphe empirique portuaire, en confrontant les classements de métriques à un proxy d'impact structurel obtenu par suppression unitaire : la variation d'efficacité globale ($\Delta\mathrm{Eff}$) et, lorsque discriminante, la variation de fraction de paires connectées ($\Delta\mathrm{ConnPairs}$). Sur le cas empirique et dans le régime nominal testé, la déconnexion n'est pas observée en suppression unitaire ($\Delta\mathrm{ConnPairs}$ constant) et l'évaluation se ramène principalement à $\Delta\mathrm{Eff}$. Dans ce régime, la current-flow closeness (distance de résistance) est fortement alignée avec $\Delta\mathrm{Eff}$, à un niveau comparable à une baseline directement liée aux flux (strength), tandis que les centralités classiques restent informatives. Des stress tests ont été explorés pour augmenter la probabilité de fragmentation, sans garantir l'émergence de ruptures sous perturbation unitaire dans les exécutions rapportées. Le rapport discute les implications, les limites (projection non orientée, poids proxy, vérité de référence approximée) et les pistes d'extension vers des perturbations multi-nœuds et des modèles plus opérationnels.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Les dernières années ont mis en évidence à quel point les chaînes d'approvisionnement mondiales sont à la fois centrales pour l'économie et vulnérables. La pandémie de COVID-19, les blocages portuaires, les pénuries de composants ou encore les tensions géopolitiques ont montré qu'un seul site --- une usine, un port, un entrepôt, un fournisseur clé --- peut désorganiser tout un réseau. En parallèle, la numérisation et l'essor de l'IA dans le transport et la logistique (routage algorithmique, véhicules autonomes, optimisation temps réel) rendent les réseaux plus efficaces, mais aussi plus complexes, donc plus difficiles à analyser du point de vue du risque. Dans ce contexte, le Supply Chain Risk Management (SCRM) et la compréhension de la résilience structurelle des réseaux logistiques sont devenus des enjeux majeurs.
+
+Une partie de la littérature SCRM propose de représenter la supply chain comme un graphe : les sites (fournisseurs, usines, entrepôts, hubs, clients) sont modélisés comme des nœuds, et les relations d'affaires ou les liaisons de transport comme des arêtes. Sur ces graphes, on mobilise surtout des métriques \og classiques \fg{} de théorie des graphes --- centralité de degré, d'intermédiarité (betweenness), de proximité (closeness), d'eigenvector, etc. --- pour identifier les nœuds \og critiques \fg{}. Ces indicateurs sont souvent combinés à des analyses de scénarios ou à des modèles plus dynamiques (par exemple des simulations de propagation de perturbations) pour étudier la résilience du réseau. Ils ont permis de mettre en avant le rôle des hubs très connectés, des \og ponts \fg{} entre communautés de nœuds, ou encore l'influence de certaines topologies (réseaux centralisés, scale-free, etc.) sur la vulnérabilité globale.
+
+Ces approches restent toutefois largement centrées sur la structure locale et sur les plus courts chemins. Elles répondent bien à des questions telles que : \og quel nœud est le plus connecté ? \fg{}, \og quel nœud se trouve sur le plus de plus courts chemins ? \fg{}, \og quelle structure globale maximise la taille de la composante principale ? \fg{}. En revanche, elles capturent mal une question au cœur de la résilience structurelle :
+\begin{quote}
+À quel point le réseau offre-t-il une connectivité effectivement redondante entre deux points donnés, en tenant compte de l'ensemble des itinéraires possibles et de leur multiplicité ?
+\end{quote}
+
+Dans la théorie des réseaux complexes et pour d'autres infrastructures (énergie, transport, communications), la distance de résistance et l'indice de Kirchhoff constituent précisément des réponses à ce type de question. En assimilant le graphe à un réseau électrique, chaque arête porte une résistance (ou sa conductance), et la distance de résistance entre deux nœuds correspond à la résistance équivalente entre eux, en intégrant tous les chemins existants. L'indice de Kirchhoff, qui agrège ces distances sur toutes les paires de nœuds, fournit alors une mesure globale de connectivité effective et de redondance structurelle. Intuitivement, un réseau \og court \fg{} et fortement maillé a un indice de Kirchhoff faible, tandis qu'un réseau arborescent, avec peu de chemins alternatifs, aura un indice élevé.
+
+Malgré cette adéquation conceptuelle, ces outils restent peu mobilisés comme métriques de criticité dans la littérature SCRM appliquée aux réseaux de supply chain, où dominent des centralités classiques et des mesures basées sur les plus courts chemins. La plupart des travaux se limitent ainsi à un ensemble d'indicateurs topologiques hétérogènes, sans exploiter une notion unifiée de \og connectivité effective \fg{} fondée sur l'ensemble des itinéraires.
+
+Ce travail part de ce gap. L'objectif n'est pas de développer un modèle dynamique complet de propagation de perturbations, mais de proposer et d'analyser des métriques structurelles fondées sur la distance de résistance, adaptées à des réseaux logistiques. Plus précisément, ce travail propose :
+\begin{itemize}
+  \item de modéliser explicitement un réseau logistique comme un graphe résistif, où chaque arête porte une résistance dérivée d'un proxy simple (dans le cas d'étude, un mapping basé sur les intensités de flux) ;
+  \item de définir des métriques de criticité structurelle de nœuds basées sur la distance de résistance et l'indice de Kirchhoff ;
+  \item de comparer ces métriques aux centralités classiques sur des graphes jouets et un cas d'étude empirique.
+\end{itemize}
+
+La question de recherche qui guide ce travail peut ainsi être formulée :
+\begin{quote}\textbf{Dans quelle mesure des métriques de criticité basées sur la distance de résistance capturent-elles la fragilité ou la robustesse structurelle des nœuds d'un réseau de supply chain, comparées aux centralités graphiques classiques aujourd'hui utilisées en SCRM ?}\end{quote}
+
+En répondant à cette question dans un cadre structurel (sans modélisation détaillée de flux ou de dynamiques temporelles), il s'agit d'évaluer si la distance de résistance et l'indice de Kirchhoff offrent une lecture complémentaire de la criticité, et dans quels types de structures (réseaux maillés, arborescents, hybrides) cette lecture apporte une valeur ajoutée tangible par rapport aux outils existants.
+
+\section{Literature review and related work}
+
+Les recherches sur la résilience des chaînes d'approvisionnement et le Supply Chain Risk Management (SCRM) mobilisent largement des métriques classiques et des modèles de performance, tandis que les outils issus de la résistance effective (distance de résistance, indice de Kirchhoff) restent rarement formulés comme indicateurs centraux de criticité en SCRM appliqué aux réseaux de supply chain. Les approches dominantes s'appuient plutôt sur (i) des indicateurs opérationnels (niveau de service, temps de récupération, coûts) et (ii) des métriques d'analyse de réseau social (Social Network Analysis, SNA), en particulier les centralités de nœuds, souvent combinées à des analyses de scénarios \citep{HosseiniShekarabi2025}.
+Dans cette perspective \og réseau \fg{}, plusieurs travaux fondateurs ont contribué à installer l'idée que la vulnérabilité est systémique et dépend de la topologie (concentration, redondance, modularité), en particulier dans les lectures \og complex adaptive systems \fg{} des supply networks \citep{Surana2005,Thadakamalla2004}.
+
+\subsection{Domaine d'application : SCRM et notion de résilience}
+Le SCRM vise à identifier, quantifier et atténuer les perturbations susceptibles d'affecter une chaîne d'approvisionnement, dans des environnements où l'interdépendance et la mondialisation amplifient la propagation des chocs (catastrophes naturelles, défaillances fournisseurs, instabilité géopolitique, volatilité de la demande, etc.) \citep{HosseiniShekarabi2025}.
+
+Dans ce cadre, la résilience est généralement comprise comme la capacité à anticiper, absorber et récupérer rapidement après un événement perturbateur, en maintenant un niveau de performance satisfaisant ou en revenant vers un état proche du nominal. Cette lecture met l'accent sur des dimensions mesurables (temps de rétablissement, perte de performance, coût de reconfiguration), et sur des méthodes quantitatives (optimisation robuste/stochastique, simulation multi-scénarios, MCDM, etc.) \citep{HosseiniShekarabi2025}.
+
+Un point important pour la suite est que, même lorsque les méthodes sont très riches du point de vue décisionnel (politiques de sourcing, stocks tampon, replanification), la dimension topologique du réseau (redondance structurelle, présence de ponts, maillage) est souvent traitée de manière indirecte ou via quelques métriques classiques, plutôt que via une mesure unifiée de \og connectivité effective \fg{} \citep{Bento2024,BellamyBasole2013,BasoleBellamy2014,HosseiniShekarabi2025}.
+
+\subsection{Approches par graphe pour les chaînes d'approvisionnement}
+La représentation des supply chains sous forme de graphes s'est imposée comme une alternative au schéma linéaire \og fournisseur $\rightarrow$ usine $\rightarrow$ entrepôt $\rightarrow$ client \fg{}. Dans cette perspective, les centralités issues de la SNA sont devenues des outils standards pour repérer des acteurs \og importants \fg{} : degré, proximité (closeness), intermédiarité (betweenness), autovecteur, PageRank, etc. Une revue récente souligne la place dominante de ces métriques dans les études de SNA appliquées au Supply Chain Management \citep{Bento2024}.
+Cette évolution est également documentée dans des revues systématiques qui articulent structure de réseau, visibilité et diffusion du risque \citep{BellamyBasole2013,BasoleBellamy2014}.
+
+Ces mesures ont des avantages clairs : elles sont interprétables, faciles à calculer, et permettent de détecter des hubs ou des \og ponts \fg{} susceptibles de concentrer le risque. Cependant, elles reposent souvent sur des logiques locales (degré) ou plus-court-chemin (betweenness/closeness), ce qui peut sous-estimer le rôle de la multiplicité des itinéraires et la redondance globale du réseau.
+Un exemple de travail centré sur l'identification de goulots d'étranglement en supply networks par comparaison de mesures de réseau est \citet{Mizgier2013}, qui met en avant le compromis efficacité--vulnérabilité et la pertinence d'une approche de classement.
+
+En parallèle, une littérature importante modélise des perturbations en cascade (ripple effect), où un choc local se propage via des dépendances amont/aval et des contraintes de capacité. Ces travaux motivent l'idée que la structure du graphe (densité, ponts, modularité, redondance) conditionne l'ampleur des impacts et la vitesse de propagation \citep{Li2021RippleEffect}.
+
+Dans une veine plus \og robustesse topologique \fg{}, certaines études comparent la résistance d'architectures (étoile, maillé, etc.) par des suppressions ciblées/aléatoires et des indicateurs comme la taille de la composante géante ou les distances moyennes, et mobilisent parfois la connectivité algébrique (la deuxième plus petite valeur propre du Laplacien, $\lambda_2$) comme proxy de robustesse globale \citep{Zhao2018,Perera2017}.
+
+Dans ce rapport, l'objectif n'est pas de reproduire une dynamique complète de propagation (stocks, replanification, substitution), mais de proposer une lecture structurelle complémentaire, centrée sur la redondance des itinéraires et la facilité globale de circulation implicite dans la topologie.
+
+\subsection{Distance de résistance et indice de Kirchhoff}
+La distance de résistance (ou effective resistance) fournit une notion de distance qui agrège l'effet de tous les chemins entre deux nœuds, plutôt que de se limiter aux plus courts chemins. Elle se définit en assimilant le graphe à un réseau électrique : les arêtes portent des résistances (ou, de façon équivalente, des conductances), et la distance de résistance entre deux nœuds correspond à la résistance équivalente mesurée entre eux. Mathématiquement, elle s'exprime via le pseudo-inverse du Laplacien.
+La formalisation de la resistance distance est classiquement attribuée à \citet{KleinRandic1993}.
+
+Cette notion est particulièrement intéressante pour des réseaux où la robustesse tient à la multiplicité des itinéraires : plus il existe de chemins alternatifs de bonne \og qualité \fg{}, plus la résistance effective entre deux nœuds est faible. Cette définition s'étend naturellement au cas pondéré, où les arêtes portent des conductances $(w_{ij})$ (ou des résistances $(r_{ij})$), ce qui permet d'intégrer des proxies logistiques (temps, capacité, fiabilité) dans un cadre unique.
+
+L'indice de Kirchhoff (ou résistance totale du graphe) agrège la distance de résistance sur toutes les paires de nœuds. Il fournit une mesure globale de \og connectivité effective \fg{} : un réseau dense et maillé tend à présenter un indice plus faible qu'un réseau arborescent, où chaque paire dépend d'un petit nombre de liaisons critiques \citep{Ellens2011,Wei2018}.
+Au niveau des métriques nodales, les current-flow centralities (par ex. current-flow closeness) fournissent des indicateurs de criticité compatibles avec cette intuition multi-chemins, en remplaçant l'hypothèse \og shortest paths \fg{} par une circulation de type courant électrique \citep{BrandesFleischer2005}.
+
+\subsection{Robustesse des infrastructures et portée pour la SCRM}
+La résistance effective est bien établie comme outil d'évaluation de robustesse dans plusieurs réseaux d'infrastructure. Par exemple, \citet{Wei2018} l'emploient pour caractériser la robustesse structurelle de réseaux de transport aérien et discutent l'intérêt de configurations réduisant la résistance totale (indice de Kirchhoff) pour accroître la tolérance aux pannes d'arêtes.
+
+De même, dans le contexte des réseaux électriques, des travaux ont montré des liens entre résistance effective globale et vulnérabilité aux pannes en cascade, interprétant une résistance totale plus faible comme une capacité accrue à absorber des redistributions de flux \citep{Wang2016EffectiveResistance}.
+
+Ces résultats ne signifient pas que la résistance effective soit \og nouvelle \fg{} en transport ou en ingénierie des réseaux. En revanche, ils suggèrent une transposition naturelle vers des problématiques SCRM : si l'on modélise une supply chain (ou une couche logistique de celle-ci) comme un graphe pondéré, alors une métrique qui capture la redondance multi-chemins peut compléter les centralités locales et plus-court-chemin pour identifier des points de fragilité systémique.
+
+Ce point est particulièrement pertinent pour des réseaux logistiques tels que les réseaux portuaires et maritimes, où l'existence (ou non) de liaisons alternatives, de hubs de transbordement et de chemins de contournement conditionne directement la résilience structurelle.
+
+\subsection{Synthèse et positionnement du travail}
+En synthèse, la littérature SCRM mobilise largement des métriques de centralité et des modèles de propagation/robustesse, mais les mesures fondées sur la connectivité effective (distance de résistance, indice de Kirchhoff) sont plus souvent développées et discutées dans la littérature \og infrastructures \fg{} que formulées comme indicateurs de criticité dans la littérature SCRM centrée supply chain. Dans ce contexte, ce rapport se positionne comme une contribution méthodologique : formaliser un cadre résistif pour réseaux logistiques, définir des métriques associées, puis comparer systématiquement leur capacité à repérer des nœuds critiques par rapport aux centralités classiques, y compris sur un cas de réseau de transport réel.
+
+\section{Problem formulation}
+
+\subsection{Modélisation du réseau de supply chain comme graphe}
+Nous représentons une chaîne d'approvisionnement (ou plus généralement un réseau logistique) sous la forme d'un graphe pondéré
+$$
+G=(V,E),
+$$
+où :
+\begin{itemize}
+  \item $V$ est l'ensemble des nœuds (sites ou acteurs) : usines, entrepôts, plateformes, ports, hubs, grands clients, etc.
+  \item $E\subseteq V\times V$ est l'ensemble des arêtes représentant des relations logistiques : liaisons de transport, relations fournisseur--client, arcs de distribution.
+\end{itemize}
+
+Le modèle vise un niveau structurel : un nœud représente un site (ou un agrégat de sites), et une arête représente une possibilité de liaison ou d'échange, sans modéliser finement les stocks, la demande, ni la dynamique opérationnelle. Dans ce rapport, l'objectif est de formaliser la fragilité/robustesse structurelle des nœuds (via suppressions de nœuds) afin de comparer des métriques de criticité nodale. Une extension vers une criticité d'arêtes nécessiterait une définition de référence dédiée et des calculs supplémentaires.
+
+\subsection{Graphe résistif et choix orienté vs non orienté}
+Les réseaux logistiques sont souvent orientés (sens dominant des flux). Cependant, les métriques basées sur la résistance effective s'expriment naturellement via le Laplacien d'un graphe non orienté. Le cadre suivant est donc adopté :
+\begin{enumerate}
+  \item Le réseau peut être décrit initialement par un graphe potentiellement orienté, avec des poids $w_{ij}^{\rightarrow}\ge 0$ (intensité de la liaison $i\to j$).
+  \item Pour le calcul des métriques basées sur la distance de résistance, le calcul est effectué sur une projection non orientée obtenue par symétrisation, par exemple :
+  $$
+  w_{ij}=\frac{1}{2}\left(w_{ij}^{\rightarrow}+w_{ji}^{\rightarrow}\right)
+  \quad \text{ou} \quad
+  w_{ij}=w_{ij}^{\rightarrow}+w_{ji}^{\rightarrow}.
+  $$
+  Ce choix permet de capturer une notion de connectivité effective et redondante indépendamment du sens strict des flux, ce qui est cohérent avec une lecture \og infrastructure/logistique \fg{} de la robustesse structurelle.
+\end{enumerate}
+
+Dans la suite, $G$ désigne cette version non orientée pondérée quand on parle de Laplacien, distance de résistance et indice de Kirchhoff.
+
+\subsection{Encodage résistif des arêtes}
+$G$ est interprété comme un graphe résistif : à chaque arête $(i,j)\in E$ est associée une résistance logistique
+$$
+r_{ij}>0,
+$$
+qui agrège des caractéristiques de la liaison (temps, distance, fiabilité, congestion, capacité, etc.). Intuitivement, une liaison \og facile \fg{} et fiable correspond à une résistance faible.
+
+On définit la conductance :
+$$
+w_{ij}=\frac{1}{r_{ij}},
+$$
+et les matrices associées :
+\begin{itemize}
+  \item matrice d'adjacence pondérée $W=(w_{ij})$,
+  \item matrice des degrés $D$ avec $D_{ii}=\sum_j w_{ij}$,
+  \item Laplacien pondéré $L=D-W$.
+\end{itemize}
+Cette construction servira ensuite à définir la distance de résistance entre nœuds, ainsi que l'indice de Kirchhoff.
+
+\subsection{Robustesse structurelle et fragilité des nœuds}
+Pour comparer des métriques de criticité, il faut une notion de référence de \og ce qui est réellement fragile \fg{} au sens structurel. Une fonction de robustesse est donc introduite,
+$$
+R(G)\in\mathbb{R},
+$$
+interprétée comme la capacité du réseau à rester connecté et redondant :
+\begin{itemize}
+  \item $R(G)$ est élevée pour un réseau jugé robuste (beaucoup d'alternatives, faibles distances structurelles),
+  \item $R(G)$ est faible pour un réseau fragile (peu de redondance, goulots, dépendances fortes).
+\end{itemize}
+
+La forme de $R$ n'est pas figée ici. L'important est que $R$ soit une mesure de référence non circulaire (c.-à-d. non définie comme une transformation directe d'une métrique testée) lorsqu'il s'agit d'évaluer des métriques. Dans ce rapport, $R$ est instanciée par des indicateurs structurels d'impact après suppression, notamment une perte d'efficacité globale ($\Delta\mathrm{Eff}$) et une perte de connectivité en paires ($\Delta\mathrm{ConnPairs}$), estimées sur un sous-ensemble de perturbations pour rester calculables à grande échelle. Note : $\Delta\mathrm{Eff}$ repose sur des distances de plus courts chemins (en hops ou pondérées par \texttt{cost}); elle constitue donc une cible de référence pertinente mais pas \og totalement neutre \fg{} vis-à-vis des métriques elles-mêmes basées sur les plus courts chemins (p. ex. betweenness). C'est pourquoi $\Delta\mathrm{ConnPairs}$ est aussi rapportée, car elle dépend seulement de la structure des composantes connexes.
+
+\paragraph{Cas où la connectivité est trop robuste (stress tests).}
+Dans certains réseaux très redondants, la suppression d'un seul nœud ne provoque pas de déconnexion mesurable (on observe alors $\Delta\mathrm{ConnPairs}(v)=0$ pour la plupart des $v$ testés). Cela ne signifie pas que \og rien ne change \fg{} : le réseau peut rester connecté tout en devenant moins efficace (distances plus longues, résistance effective plus élevée) lorsque l'on retire des chemins redondants. Dans ce cas, $\Delta\mathrm{ConnPairs}$ n'est pas discriminante pour comparer des classements. L'analyse procède donc en deux temps : (i) en régime nominal, une cible continue comme $\Delta\mathrm{Eff}$ est privilégiée, car elle capture une dégradation graduelle de l'accessibilité même sans rupture de connexité ; (ii) si l'on souhaite analyser explicitement une fragilité par déconnexion, l'analyse peut être complétée par des stress tests contrôlés (focalisation sur les points d'articulation lorsqu'ils existent, et/ou sparsification du graphe par filtrage de ports/liaisons à faible flux) qui peuvent augmenter la probabilité d'observer des ruptures de connectivité. Selon le réseau et l'intensité de la sparsification, il est toutefois possible que $\Delta\mathrm{ConnPairs}$ reste constant en suppression unitaire, auquel cas l'analyse de connectivité doit être interprétée comme non concluante à ce niveau de perturbation.
+
+Sur cette base, on définit la fragilité structurelle d'un nœud $v\in V$ comme la perte de robustesse induite par sa suppression :
+\begin{itemize}
+  \item graphe amputé :
+  $$
+  G\setminus v=\bigl(V\setminus\{v\},\, E\setminus\{(v,\cdot),(\cdot,v)\}\bigr),
+  $$
+  \item perte de robustesse :
+  $$
+  \Delta R(v)=R(G)-R(G\setminus v).
+  $$
+\end{itemize}
+
+Un nœud est structurellement critique si $\Delta R(v)$ est élevé.
+
+\subsubsection*{Convention en cas de déconnexion}
+La suppression d'un nœud peut déconnecter le réseau, ce qui constitue précisément un cas de criticité. Dans le protocole effectivement implémenté, une dissociation est opérée entre (i) les métriques basées sur la distance de résistance, qui nécessitent un Laplacien connecté, et (ii) la mesure de la déconnexion induite par la suppression :
+\begin{itemize}
+  \item Les métriques basées sur la distance de résistance (par ex. $C_{\mathrm{cf\text{-}clo}}$, $\bar K(G)$) sont calculées sur une composante connexe (en pratique la composante géante) afin de disposer d'un Laplacien bien défini.
+  \item L'impact par fragmentation est mesuré séparément par $\Delta\mathrm{ConnPairs}(v)$ (fraction de paires connectées). Pour la cible continue $\Delta\mathrm{Eff}(v)$, les paires injoignables contribuent $0$ par construction, ce qui reflète déjà une partie de l'effet de déconnexion.
+\end{itemize}
+Ainsi, aucune \og pénalisation \fg{} ad hoc n'est introduite dans les scores basés sur la distance de résistance : la perte de connectivité est portée explicitement par $\Delta\mathrm{ConnPairs}$ (et indirectement par $\Delta\mathrm{Eff}$), tandis que les quantités résistives sont évaluées sur la composante connexe considérée.
+
+\subsection{Métriques de criticité : classiques vs distance de résistance}
+Nous considérons deux familles de métriques de criticité pour les nœuds.
+
+\subsubsection{Métriques classiques (SCRM / graph-based)}
+Ces métriques sont largement utilisées pour identifier des éléments \og importants \fg{} :
+\begin{itemize}
+  \item centralité de degré $C_{\mathrm{deg}}(v)$ (éventuellement pondérée),
+  \item centralité d'intermédiarité $C_{\mathrm{bet}}(v)$,
+  \item centralité de proximité $C_{\mathrm{clo}}(v)$,
+  \item centralité d'autovecteur $C_{\mathrm{eig}}(v)$.
+\end{itemize}
+Elles capturent des aspects locaux (degré) ou basés sur les plus courts chemins (betweenness/closeness).
+
+\subsubsection{Métriques basées sur la résistance effective}
+Ces métriques s'appuient sur la structure résistive et intègrent l'effet de tous les chemins.
+\begin{itemize}
+  \item Centralité de proximité \og current-flow \fg{} (résistance-based closeness) :
+  $$
+  C_{\mathrm{cf\text{-}clo}}(v)=\left(\sum_{u\neq v} R(u,v)\right)^{-1},
+  $$
+  où $R(u,v)$ est la distance de résistance entre $u$ et $v$.
+
+  \item Indice de Kirchhoff (résistance totale) :
+  $$
+  K(G)=\sum_{u<v} R(u,v).
+  $$
+
+  Pour des comparaisons impliquant des suppressions (où la taille du graphe change), on introduit une version normalisée :
+  $$
+  \bar K(G)=\frac{2}{n(n-1)}\sum_{u<v}R(u,v),\quad n=|V|.
+  $$
+
+  \item Criticité \og Kirchhoff \fg{} par suppression (métrique candidate) :
+  $$
+  C_{\mathrm{resK}}(v)=\bar K(G\setminus v)-\bar K(G),
+  $$
+  où, si $G\setminus v$ devient déconnecté, $\bar K(\cdot)$ est interprété sur la composante connexe (en pratique la composante géante) et l'effet de fragmentation est capturé séparément via $\Delta\mathrm{ConnPairs}(v)$.
+\end{itemize}
+
+\noindent Remarque importante : $C_{\mathrm{resK}}$ peut être vu soit comme une métrique candidate à comparer aux centralités classiques, soit comme une définition intrinsèque de criticité (au sens Kirchhoff). Dans ce rapport, lorsque l'objectif est une comparaison méthodologique, la référence $\Delta R$ est choisie de manière à ne pas être identique à $C_{\mathrm{resK}}$, afin d'éviter une validation circulaire.
+
+\subsubsection{Pourquoi une analyse centrée sur les nœuds}
+Dans ce travail, l'analyse se concentre sur la criticité des nœuds. Ce choix est motivé par (i) l'alignement avec les données et le codebase (les observations et la vérité \og neutral \fg{} sont définies par retrait de nœuds), (ii) la disponibilité limitée d'information fine au niveau des liaisons dans le cas d'étude (agrégation port-port), et (iii) le coût combinatoire d'une analyse exhaustive sur toutes les arêtes ou chemins. Une extension vers une criticité d'arêtes (liaisons) nécessiterait une définition de référence dédiée et des calculs supplémentaires; elle est laissée en perspective.
+
+\subsection{Problème de comparaison}
+Étant donné un réseau logistique modélisé par un graphe résistif $G$, les éléments suivants sont disponibles pour chaque nœud $v$ :
+\begin{itemize}
+  \item d'une référence d'impact $\Delta R(v)$, issue d'une mesure de robustesse $R$ choisie indépendamment des métriques testées ;
+  \item d'un ensemble de scores de criticité :
+  \begin{itemize}
+    \item métriques classiques : $C_{\mathrm{deg}}(v)$ (degré), $C_{\mathrm{str}}(v)$ (strength/degree pondéré), $C_{\mathrm{bet}}(v)$ (betweenness), $C_{\mathrm{eig}}(v)$ (eigenvector),
+    \item métriques basées sur la distance de résistance : $C_{\mathrm{cf\text{-}clo}}(v)$ (current-flow closeness). La métrique $C_{\mathrm{resK}}(v)$ (variation de $\bar K$ par suppression) est discutée comme option, mais n'est pas utilisée dans le protocole empirique principal pour des raisons de coût de calcul.
+  \end{itemize}
+\end{itemize}
+
+Le problème étudié se formule ainsi :
+\begin{quote}
+Pour un réseau logistique donné (ou une famille de réseaux), dans quelle mesure des métriques de criticité fondées sur la distance de résistance discriminent-elles les nœuds à fort impact structurel (mesuré par $\Delta R$) mieux --- ou différemment --- que les centralités classiques ?
+\end{quote}
+
+Concrètement, il s'agira :
+\begin{itemize}
+  \item de comparer les classements induits par chaque métrique au classement induit par $\Delta R(\cdot)$ (corrélations de rang, chevauchement top-$k$, stabilité des top-$k$ selon la topologie) ;
+  \item d'identifier les situations où les métriques basées sur la distance de résistance apportent une information complémentaire (réseaux fortement maillés vs arborescents, présence de hubs, architectures hybrides), notamment en mettant en évidence des nœuds que les métriques plus-court-chemin ou locales sous-estiment.
+\end{itemize}
+
+Cette formulation fournit un cadre mathématique explicite pour les développements suivants : définition opérationnelle de $r_{ij}$, calcul de $R(u,v)$ et $\bar K(G)$, instanciation d'une référence $\Delta R$ non circulaire, puis comparaison systématique des métriques sur des réseaux jouets, des réseaux synthétiques, et un cas d'étude empirique (réseau portuaire).
+
+\section{Resistance-distance-based model}
+
+\subsection{Encodage des poids d'arêtes en résistances logistiques}
+Pour exploiter la distance de résistance dans un contexte de supply chain, le réseau logistique est interprété comme un graphe résistif : chaque arête $(i,j)\in E$ est associée à une résistance logistique $r_{ij}>0$ qui représente la \og difficulté \fg{} structurelle de relier $i$ et $j$ (au sens d'itinéraires disponibles, qualité moyenne des liaisons, redondance implicite), sans modéliser explicitement des flux dynamiques.
+
+Comme indiqué dans la formulation du problème, les métriques basées sur la distance de résistance sont calculées sur une version non orientée du réseau (projection/symétrisation). En pratique, si l'on part de poids orientés $w_{ij}^{\rightarrow}$, une pondération symétrique $w_{ij}=w_{ji}$ est construite (par exemple $w_{ij}=w_{ij}^{\rightarrow}+w_{ji}^{\rightarrow}$), puis les résistances $r_{ij}$ en sont déduites. Dans le cas empirique (réseau portuaire), un encodage basé sur l'intensité de flux est utilisé : un lien \og fort \fg{} (flux élevé) est interprété comme une conductance élevée, et l'on pose typiquement $r_{ij}=1/(flow_{ij}+\varepsilon)$ (équivalemment $w_{ij}=flow_{ij}$ et $r_{ij}=1/(w_{ij}+\varepsilon)$).
+
+Dans ce travail, on considère des schémas d'encodage simples, compatibles avec des données souvent disponibles :
+\begin{itemize}
+  \item Version homogène (baseline)
+  $$
+  r_{ij}=1 \quad \text{pour toute arête } (i,j)\in E,
+  $$
+  afin d'isoler l'effet de la topologie (maillage, redondance, goulots).
+\end{itemize}
+
+\noindent Remarque (alignement expérimental). Dans l'expérimentation empirique sur le réseau portuaire, l'encodage basé sur les flux est utilisé (conductances proportionnelles à l'intensité de flux) ; la variante \og baseline \fg{} sert surtout de point de comparaison sur graphes jouets lorsque des poids réels ne sont pas disponibles.
+
+Afin de rendre les comparaisons robustes (entre topologies, ou entre schémas d'encodage baseline vs flux), on peut appliquer une normalisation simple lorsque nécessaire. Par exemple, on peut normaliser les poids $w_{ij}$ (par exemple en divisant par $\sum_{(i,j)\in E} w_{ij}$, ou en travaillant sur des poids rescalés) afin d'éviter qu'une simple échelle de mesure ne domine l'interprétation. De plus, pour éviter des instabilités numériques, on utilise une petite constante $\varepsilon>0$ et on pose :
+$$
+w_{ij}=\frac{1}{r_{ij}+\varepsilon}.
+$$
+
+À partir des conductances $w_{ij}$, on construit :
+\begin{itemize}
+  \item la matrice d'adjacence pondérée $W=(w_{ij})$,
+  \item la matrice des degrés $D$ avec $D_{ii}=\sum_j w_{ij}$,
+  \item le Laplacien pondéré $L=D-W$.
+\end{itemize}
+Cette matrice est l'objet central pour définir la distance de résistance et les métriques associées.
+
+\subsection{Distance de résistance, (dé)connexion et indice de Kirchhoff}
+La distance de résistance entre deux nœuds $u,v\in V$, notée $R(u,v)$, est définie à partir du pseudo-inverse de Moore--Penrose du Laplacien $L$, noté $L^{+}$ :
+$$
+R(u,v)=(e_u-e_v)^\top L^{+}(e_u-e_v),
+$$
+où $e_u$ et $e_v$ sont les vecteurs canoniques. Intuitivement, $R(u,v)$ correspond à la résistance équivalente entre $u$ et $v$ dans le réseau électrique associé : elle agrège l'effet de tous les chemins reliant $u$ et $v$, et diminue lorsque le réseau offre des itinéraires alternatifs nombreux et \og bons \fg{}.
+
+\subsubsection*{Calcul spectral}
+Dans le code, on évite de former explicitement $L^{+}$ par pseudo-inverse dense dès que la taille augmente, et on s'appuie sur la décomposition spectrale du Laplacien (cas non orienté) :
+$$
+L = U \Lambda U^\top,\quad 0=\lambda_1<\lambda_2\le \cdots \le \lambda_n,
+$$
+ce qui donne :
+$$
+L^{+}=\sum_{k=2}^{n}\frac{1}{\lambda_k}\,u_k u_k^\top.
+$$
+Cela permet notamment de calculer $\bar K(G)$ via la trace, sans construire toutes les distances :
+$$
+\bar K(G)=\frac{2}{n-1}\,\mathrm{tr}(L^{+})=\frac{2}{n-1}\sum_{k=2}^{n}\frac{1}{\lambda_k}.
+$$
+
+\noindent Propriétés utiles :
+\begin{itemize}
+  \item Si le réseau offre de nombreux chemins alternatifs entre $u$ et $v$, $R(u,v)$ est faible.
+  \item Si la connexion repose sur quelques liaisons clés (ponts/goulots), $R(u,v)$ augmente.
+  \item Dans un arbre, $R(u,v)$ coïncide avec la longueur (pondérée) du chemin unique.
+\end{itemize}
+
+\subsubsection*{Traitement empirique de la déconnexion}
+Les définitions ci-dessus sont les plus standard lorsque le graphe est connecté. Dans le protocole empirique, les métriques basées sur la distance de résistance sont calculées sur la composante géante afin d'assurer un Laplacien connecté. La perte de connectivité due aux suppressions est ensuite capturée séparément par l'indicateur \og neutre \fg{} $\Delta\mathrm{ConnPairs}$ (fraction de paires connectées), ce qui correspond directement au pipeline d'évaluation implémenté.
+
+\subsection{Indice de Kirchhoff (résistance totale) et version normalisée}
+L'indice de Kirchhoff agrège les distances de résistance sur toutes les paires :
+$$
+K(G)=\sum_{u<v} R(u,v).
+$$
+
+Pour comparer des graphes de tailles différentes (ou des graphes après suppression d'un nœud), on utilise une version normalisée (moyenne par paire) :
+$$
+\bar K(G)=\frac{2}{n(n-1)}\sum_{u<v}R(u,v),\quad n=|V|.
+$$
+
+\noindent Interprétation : un réseau dense et redondant a tendance à avoir une $\bar K(G)$ plus faible qu'un réseau allongé ou faiblement maillé. Dans la suite, $\bar K(G)$ est interprété comme un indicateur inverse de connectivité effective : plus $\bar K(G)$ est grand, plus le réseau est structurellement \og fragile \fg{} au sens de redondance d'itinéraires.
+
+\subsection{Métriques de criticité basées sur la distance de résistance}
+À partir de $R(u,v)$ et de $\bar K(G)$, on définit plusieurs métriques de criticité.
+
+\subsubsection{Criticité par variation de l'indice de Kirchhoff normalisé (optionnel)}
+Pour chaque nœud $v\in V$, on considère le graphe amputé :
+$$
+G\setminus v=\bigl(V\setminus\{v\},\,E\setminus\{(v,\cdot),(\cdot,v)\}\bigr),
+$$
+et on calcule $\bar K(G\setminus v)$ sur une composante connexe (en pratique la composante géante si le graphe se déconnecte), en interprétant la perte de connectivité séparément via $\Delta\mathrm{ConnPairs}(v)$. On définit alors la criticité \og Kirchhoff \fg{} d'un nœud :
+$$
+C_{\mathrm{resK}}(v)=\bar K(G\setminus v)-\bar K(G).
+$$
+
+\noindent Interprétation : si la suppression de $v$ augmente fortement $\bar K$, le réseau devient globalement \og plus long \fg{} et moins redondant ; $v$ joue alors un rôle structurel important dans la connectivité effective d'ensemble.
+
+La version \og suppression \fg{} de $\bar K$ est computationnellement coûteuse à grande échelle. Dans le protocole empirique principal, $C_{\mathrm{resK}}$ n'est donc pas calculée sur le graphe réel, et les métriques nodales directes basées sur $R(u,v)$ sont privilégiées (voir ci-dessous). La version arête $C_{\mathrm{resK}}(e)$ est laissée en extension.
+
+\subsubsection{Centralité \og current-flow \fg{} (resistance-based closeness)}
+La distance de résistance permet de définir des centralités qui généralisent la closeness à l'ensemble des chemins. On considère notamment :
+$$
+C_{\mathrm{cf\text{-}clo}}(v)=\left(\sum_{u\neq v}R(u,v)\right)^{-1}.
+$$
+Un nœud obtient un score élevé s'il est structurellement \og proche \fg{} des autres en termes de résistance effective, ce qui reflète une forme de centralité diffuse : même sans être sur de nombreux plus courts chemins, il peut être bien positionné pour la circulation potentielle qui se répartit sur plusieurs itinéraires.
+
+\subsubsection*{Note méthodologique sur la comparaison des métriques}
+Certaines métriques basées sur la distance de résistance (comme $C_{\mathrm{cf\text{-}clo}}$ ou $C_{\mathrm{resK}}$) reposent, comme $\bar K(G)$, sur le même objet spectral ($L^{+}$). Une proximité conceptuelle est donc attendue entre ces mesures. Pour préserver une comparaison informative avec les centralités classiques (degré, betweenness, closeness, etc.), l'évaluation s'appuie sur une référence d'impact $\Delta R$ définie indépendamment de $\bar K$ lorsque l'objectif est de comparer des métriques entre elles (et non d'adopter $\bar K$ comme définition de la fragilité).
+
+\subsection{Interprétation logistique}
+Dans un contexte de supply chain ou de transport :
+\begin{itemize}
+  \item un nœud représente un site (port, hub, entrepôt, usine) ;
+  \item une arête représente une liaison logistique (maritime, routière, ferroviaire, aérienne, ou relation de transport).
+\end{itemize}
+
+Alors :
+\begin{itemize}
+  \item Une résistance effective $R(u,v)$ faible signifie qu'il existe de nombreux itinéraires alternatifs \og équivalents \fg{} pour relier $u$ et $v$ (redondance structurelle élevée).
+  \item Une résistance effective élevée suggère une dépendance à quelques liaisons clés (goulots), ou des alternatives structurellement plus \og coûteuses \fg{} (au sens du proxy choisi pour $r_{ij}$).
+  \item Un nœud avec un score de type \og delta Kirchhoff \fg{} élevé (par ex. $C_{\mathrm{resK}}(v)$, lorsque calculé) est un site dont la perte augmente fortement la distance structurelle moyenne entre les autres sites : point de fragilité systémique.
+  \item Un nœud avec $C_{\mathrm{cf\text{-}clo}}(v)$ élevé est un site structurellement bien situé au regard de la connectivité effective du réseau.
+\end{itemize}
+
+\subsection{Aspects computationnels}
+Le calcul exact de $R(u,v)$ et de $\bar K(G)$ repose sur le pseudo-inverse $L^{+}$. Pour des graphes de taille modérée (quelques centaines à $\sim$1--2 milliers de nœuds selon la densité et l'implémentation), ce calcul est réalisable via des factorisations numériques standard.
+
+Deux points sont toutefois importants :
+\begin{itemize}
+  \item Le recalcul complet de $\bar K(G\setminus v)$ pour chaque nœud $v$ peut devenir coûteux (il faut en principe répéter des calculs matriciels $n$ fois). Dans ce travail, on limite donc la taille des graphes étudiés, et/ou on restreint les expériences de suppression exhaustive lorsque nécessaire.
+  \item Pour des réseaux très grands, des méthodes approchées (solveurs laplaciens, échantillonnage de paires, approximations spectrales) seraient préférables ; ces extensions sont discutées comme perspectives.
+\end{itemize}
+
+En pratique (code), on combine (i) une méthode spectrale exacte (décomposition symétrique, \texttt{eigh}) pour obtenir $C_{\mathrm{cf\text{-}clo}}$ et $\bar K$ sur la composante géante, et (ii) une évaluation \og neutre \fg{} par suppressions sur un sous-ensemble de nœuds candidats (union des top-k selon degré et betweenness), avec des plus courts chemins estimés à partir d'un petit nombre de sources. Cela rend la comparaison réalisable en temps raisonnable sur le graphe réel.
+
+L'objectif ici est de fournir un cadre clair et cohérent pour comparer, dans des conditions contrôlées, les métriques basées sur la distance de résistance aux centralités classiques, et d'évaluer ce qu'elles capturent de la redondance structurelle dans des réseaux logistiques.
+
+\section{Expérimentation et conditions}
+
+\subsection{Types de graphes et jeux de données}
+L'objectif expérimental est de comparer des classements de criticité nodale produits par différentes métriques, et de vérifier dans quelle mesure les métriques basées sur la distance de résistance capturent un impact structurel mesuré par retrait de nœuds.
+
+Deux niveaux sont considérés, correspondant aux scripts fournis dans le codebase.
+\begin{enumerate}
+  \item Graphes jouets (contrôlés). Afin d'isoler des mécanismes topologiques simples (ponts, redondance, cycles, goulots, hubs), un petit ensemble de graphes jouets non orientés, de taille réduite, est utilisé et analysé avec exactement le même pipeline que le graphe réel (métriques + vérité \og neutral \fg{} + tableaux).
+
+  \item Cas d'étude empirique (réseau portuaire). Un graphe port-port agrégé est construit à partir du fichier \texttt{port\_trade\_network.csv}. Le graphe est construit en agrégeant, pour chaque couple \texttt{(iso3\_O, iso3\_D, Industries)}, les parts des ports exportateurs et importateurs et en appariant export$\times$import de façon proportionnelle (produit extérieur), puis en sommant sur tous les OD/industries. Les arêtes sont pondérées par une intensité de flux (\texttt{tonnes} ou \texttt{value}) et converties en conductances/résistances (Section~4).
+  La source des données est le dataset Mendeley Data \og Global port supply-chains \fg{} \citep{VerschuurDataset2022} (licence CC BY 4.0).
+\end{enumerate}
+
+\subsection{Prétraitement et pondération}
+Les métriques basées sur la distance de résistance reposent sur un Laplacien symétrique : toutes les expériences sont menées sur une version non orientée pondérée du réseau.
+\begin{itemize}
+  \item Pondération d'arêtes (empirique). Chaque arête $(i,j)$ reçoit une conductance $w_{ij}$ proportionnelle au flux agrégé (attribut \texttt{cond}), et une résistance associée $r_{ij}=1/(w_{ij}+\varepsilon)$ (attribut \texttt{cost}), où $\varepsilon>0$ évite les divisions par zéro.
+  \item Composante géante. Pour les calculs spectro-laplaciens (Section~4), les calculs sont effectués sur la composante connexe géante du graphe, de façon à garantir un Laplacien connecté. Les effets de déconnexion dus aux retraits sont ensuite mesurés explicitement par la vérité de référence $\Delta\mathrm{ConnPairs}$ (voir ci-dessous).
+  \item Filtrage (optionnel). Pour maîtriser la taille du graphe empirique, on peut (i) ne conserver que les top-$N$ ports (par volume agrégé) et/ou (ii) ignorer les arêtes de flux inférieur à un seuil \texttt{min\_edge\_flow}. Ces paramètres sont exposés dans le script d'exécution.
+\end{itemize}
+
+\subsection{Métriques comparées}
+Nous comparons un ensemble de métriques nodales calculées sur le même graphe préparé :
+\begin{itemize}
+  \item Métriques classiques :
+  \begin{itemize}
+    \item degré $C_{\mathrm{deg}}(v)$ (non pondéré),
+    \item strength $C_{\mathrm{str}}(v)=\sum_{u} w_{vu}$ (degré pondéré par \texttt{cond}),
+    \item betweenness $C_{\mathrm{bet}}(v)$, calculée sur des plus courts chemins pondérés par la résistance \texttt{cost} ; pour le graphe empirique, elle est calculée en version approchée via un échantillon de $k$ sources (paramètre \texttt{betw\_k\_sample}),
+    \item eigenvector centrality $C_{\mathrm{eig}}(v)$ sur la matrice de conductances (poids \texttt{cond}).
+  \end{itemize}
+
+  \item Métrique basée sur la distance de résistance (principale) :
+  \begin{itemize}
+    \item current-flow closeness $C_{\mathrm{cf\text{-}clo}}(v)=\left(\sum_{u\neq v}R(u,v)\right)^{-1}$, calculée exactement via décomposition spectrale du Laplacien pondéré (Section~4).
+  \end{itemize}
+\end{itemize}
+\noindent Remarque. L'indicateur global $\bar K(G)$ est également calculé (scalaire), mais l'évaluation porte sur des classements nodaux. La criticité \og par suppression de $\bar K$ \fg{} ($C_{\mathrm{resK}}$) n'est pas utilisée sur le graphe empirique (coût).
+$\bar K(G)$ est mentionnée à titre descriptif (connectivité effective globale), mais elle n'est pas utilisée comme cible d'évaluation ni comme métrique principale de criticité, car elle est structurellement favorable aux métriques basées sur la distance de résistance : $\bar K(G)$ et des scores comme la current-flow closeness proviennent du même objet (Laplacien/pseudo-inverse), et une validation basée sur $\bar K$ risquerait donc de privilégier mécaniquement cette famille. Par ailleurs, l'indice de Kirchhoff est encore rarement mobilisé comme indicateur standard dans la littérature SCRM appliquée (où dominent des centralités classiques et des métriques de performance opérationnelle), ce qui motive son statut \og optionnel \fg{} dans le protocole principal.
+
+\subsection{Fragilité structurelle comme vérité de référence}
+Une vérité de référence \og neutre \fg{} (neutral ground truth) est définie, basée sur l'impact d'un retrait de nœud sur des indicateurs structurels. Cette référence est distincte des scores comparés (elle est définie par suppression et par mesure d'impact), mais elle n'est pas nécessairement indépendante de toutes les primitives de calcul : en particulier, $\Delta\mathrm{Eff}$ utilise des distances de plus courts chemins (hops ou \texttt{cost}), ce qui peut favoriser des métriques de type shortest-path (p. ex. betweenness). Pour limiter cet effet, $\Delta\mathrm{ConnPairs}$ est également considérée, car elle ne dépend que de la fragmentation en composantes.
+Pour un graphe $G$ et un nœud $v$, on forme $G\setminus v$ et on calcule :
+\begin{itemize}
+  \item Perte de connectivité :
+  $$
+  \Delta\mathrm{ConnPairs}(v)=\mathrm{ConnPairsFrac}(G)-\mathrm{ConnPairsFrac}(G\setminus v),
+  $$
+  où $\mathrm{ConnPairsFrac}(G)$ est la fraction de paires de nœuds connectées (somme sur composantes $\sum_c |c|(|c|-1)/2$ normalisée par $n(n-1)/2$).
+  \item Perte d'efficacité globale (efficiency) :
+  $$
+  \Delta\mathrm{Eff}(v)=\mathrm{Eff}(G)-\mathrm{Eff}(G\setminus v),
+  $$
+  où $\mathrm{Eff}(G)$ est la moyenne de $1/d(s,t)$ (paires injoignables contribuent 0), suivant la définition standard de l'efficacité globale en réseaux \citep{LatoraMarchiori2001}. Les distances $d(\cdot,\cdot)$ sont calculées en hops (non pondéré) ou en coût (pondéré par \texttt{cost}), selon le mode expérimental.
+\end{itemize}
+\noindent Estimation par échantillonnage. Pour maîtriser le coût sur le graphe empirique, $\mathrm{Eff}(\cdot)$ (et l'ASPL estimée, utilisée à titre indicatif) sont estimées à partir d'un petit échantillon de sources (paramètre \texttt{n\_sources}) plutôt que sur toutes les paires.
+
+\subsection{Procédure d'évaluation}
+La question empirique est : quelles métriques produisent un classement proche du classement induit par l'impact structurel $\Delta R$ ?
+
+Pour chaque graphe, les étapes suivantes sont réalisées :
+\begin{enumerate}
+  \item calcul des métriques nodales (Section~5.3) sur le graphe préparé ;
+  \item calcul de la vérité \og neutral \fg{} sur un ensemble de nœuds testés ;
+  \item comparaison des classements métriques vs vérité de référence.
+\end{enumerate}
+
+Sur le graphe empirique, la vérité par retrait est coûteuse : elle est donc évaluée sur un sous-ensemble de nœuds candidats, construit comme l'union des top-$k$ selon degré et betweenness, puis tronquée à une taille maximale (paramètres \texttt{ref\_top\_degree}, \texttt{ref\_top\_betw}, \texttt{ref\_max}).
+
+Sont rapportés :
+\begin{itemize}
+  \item Corrélation de rang de Spearman entre le score de la métrique et la cible (par ex. $\Delta\mathrm{Eff}$ ou $\Delta\mathrm{ConnPairs}$),
+  \item Chevauchement top-$k$ : fraction d'intersection entre les $k$ nœuds les mieux classés par la métrique et les $k$ nœuds les plus critiques selon la cible, pour plusieurs valeurs de $k$ (par défaut $k\in\{25,50,100\}$).
+\end{itemize}
+
+\subsection{Détails d'implémentation et reproductibilité}
+L'analyse est reproductible via des scripts dédiés :
+\begin{itemize}
+  \item \texttt{run\_ports\_tables.py} : construction du graphe portuaire, calcul des métriques, calcul de la vérité \og neutral \fg{} sur un sous-ensemble, et export des tables CSV.
+  \item \texttt{run\_toys\_tables.py} : exécution du même pipeline sur les graphes jouets.
+\end{itemize}
+Les dépendances sont listées dans \texttt{requirements.txt} (notamment \texttt{networkx}, \texttt{numpy}, \texttt{pandas}, \texttt{scipy}). Les scripts exposent des paramètres (seeds, tailles d'échantillons, seuils de filtrage) afin de contrôler le compromis coût/qualité. Les sorties principales sont des fichiers CSV contenant (i) les métriques par nœud, (ii) la table des nœuds évalués avec leur vérité de référence, et (iii) les tableaux Spearman et top-$k$ utilisés ensuite dans la section Résultats.
+
+\paragraph{Paramètres utilisés pour le cas réel sur les ports.}
+Sauf mention contraire, les valeurs par défaut de \texttt{run\_ports\_tables.py} sont utilisées (poids \texttt{tonnes}, \texttt{top\_n\_ports}=2000, \texttt{min\_edge\_flow}=0, \texttt{seed}=0, plus courts chemins en mode \texttt{cost}). Le run nominal présenté dans la section Résultats fixe en particulier : \texttt{betw\_k\_sample}=120, \texttt{ref\_top\_degree}=120, \texttt{ref\_top\_betw}=120, \texttt{ref\_max}=180, \texttt{n\_sources}=12.
+
+\section{Résultats et discussion}
+
+\subsection{Résultats globaux (qualité vs coût)}
+Les résultats globaux sur le cas empirique (réseau portuaire) sont présentés en distinguant (i) une fragilité continue mesurée par $\Delta\mathrm{Eff}$, et (ii) la fragilité par déconnexion mesurée par $\Delta\mathrm{ConnPairs}$. Dans les exécutions nominales, la suppression d'un seul nœud ne provoque pas de déconnexion mesurable sur le sous-ensemble testé (i.e. $\Delta\mathrm{ConnPairs}$ est constant), ce qui rend cette cible non discriminante. L'analyse globale se concentre donc sur $\Delta\mathrm{Eff}$. Un contrôle par sparsification (scénario plus sévère) est également rapporté, et reste toutefois non concluant pour la déconnexion en suppression unitaire lorsque $\Delta\mathrm{ConnPairs}$ demeure constant.
+
+\paragraph{Qualité de ranking (cible $\Delta\mathrm{Eff}$, cas nominal).}
+Ces chiffres doivent être interprétés comme une photographie du protocole nominal : (i) la vérité $\Delta\mathrm{Eff}$ est estimée par échantillonnage d'un nombre limité de sources (\texttt{n\_sources}), et (ii) la comparaison est réalisée sur un sous-ensemble de nœuds candidats (union des top-k selon degré/betweenness, tronquée à \texttt{ref\_max}). Les valeurs de $\rho_s$ et des top-$k$ dépendent donc des paramètres (seed, \texttt{betw\_k\_sample}, \texttt{n\_sources}, \texttt{ref\_max}) ; des variantes contrôlées (par ex. sparsification, et seeds/tailles d'échantillons via les scripts) sont utilisées pour vérifier que les conclusions qualitatives restent stables.
+Les corrélations de Spearman confirment que la current-flow closeness (distance de résistance) fournit un classement fortement aligné avec l'impact structurel, à un niveau comparable à la strength (proxy de flux). Plus précisément :
+$$
+\rho_s(\mathrm{strength},\Delta\mathrm{Eff})\approx 0.88,\quad
+\rho_s(C_{\mathrm{cf\text{-}clo}},\Delta\mathrm{Eff})\approx 0.87,\quad
+\rho_s(\mathrm{eig},\Delta\mathrm{Eff})\approx 0.84,\quad
+\rho_s(\mathrm{bet},\Delta\mathrm{Eff})\approx 0.75,
+$$
+tandis que le degré est non informatif dans ce cas (corrélation négative faible). Ces résultats indiquent que, sur ce réseau et avec ce mapping de poids, la distance de résistance apporte un signal crédible mais ne domine pas systématiquement une baseline directement liée aux flux.
+
+\paragraph{Chevauchement top-$k$ (cible $\Delta\mathrm{Eff}$).}
+Le chevauchement top-$k$ complète la lecture \og corrélation globale \fg{} en évaluant la qualité des premières positions du classement. Pour $k=25$ et $k=50$, strength et $C_{\mathrm{cf\text{-}clo}}$ atteignent un chevauchement $\approx 0.76$ et $\approx 0.78$ avec les nœuds les plus critiques selon $\Delta\mathrm{Eff}$. La betweenness présente un très bon chevauchement à $k=25$ ($\approx 0.80$) mais une corrélation globale plus faible, ce qui est cohérent avec une métrique particulièrement sensible aux \og goulots \fg{} sans nécessairement ordonner finement les impacts continus sur l'ensemble des nœuds. Les valeurs exactes sont reportées dans les tableaux exportés.
+
+\paragraph{Contrôle par sparsification (stress test modéré).}
+Pour vérifier la stabilité des résultats dans un graphe moins dense, un scénario de sparsification a été exécuté (\texttt{top\_n\_ports}=500, \texttt{min\_edge\_flow}=500). Dans ce scénario, $\Delta\mathrm{ConnPairs}$ reste constant (déconnexion toujours rare), mais les corrélations vs $\Delta\mathrm{Eff}$ restent qualitativement similaires : \(\rho_s(\mathrm{strength},\Delta\mathrm{Eff})\approx 0.85\) et \(\rho_s(C_{\mathrm{cf\text{-}clo}},\Delta\mathrm{Eff})\approx 0.85\). Cette cohérence renforce l'interprétation principale : la current-flow closeness se comporte comme une alternative robuste à strength pour capturer une fragilité continue.
+
+\subsection{Analyse par structures (arbres, maillage, hybride)}
+Les graphes jouets servent ici de laboratoire d'interprétation : ils isolent des motifs topologiques connus (hub, chaîne, pont entre communautés, symétrie) et permettent d'expliquer pourquoi certaines métriques s'alignent (ou non) avec l'impact structurel $\Delta\mathrm{Eff}$.
+
+\paragraph{Hubs (étoile \texttt{star\_10}).}
+Dans une étoile, la fragilité est dominée par la suppression du centre : retirer le hub fait exploser les distances (et donc fait chuter l'efficacité). Dans ce cas, les métriques classiques qui identifient directement un hub (degré/strength/betweenness) sont parfaitement alignées avec $\Delta\mathrm{Eff}$ (Spearman $\approx 1$). En comparaison, la current-flow closeness est moins discriminante sur ce motif (Spearman $\approx 0.56$), car elle reflète une proximité \og diffuse \fg{} qui distingue moins fortement le centre des feuilles lorsque l'impact est essentiellement \og tout ou rien \fg{}.
+
+\paragraph{Chaînes/arbres (chemin \texttt{path\_10}).}
+Sur un chemin, l'impact de suppression est fortement structuré par la position géodésique (centre vs extrémités). Ici, les métriques basées sur l'organisation globale des distances s'alignent très fortement avec $\Delta\mathrm{Eff}$ : betweenness ($\approx 0.997$), eigenvector ($\approx 0.991$) et current-flow closeness ($\approx 0.988$). À l'inverse, le degré/strength varie peu (presque tous les nœuds ont degré 2 sauf les extrémités), ce qui explique une corrélation plus faible ($\approx 0.705$).
+
+\paragraph{Ponts entre communautés (\texttt{two\_triangles\_bridge} et \texttt{two\_cliques\_two\_bridges}).}
+Lorsque deux sous-graphes denses sont reliés par un nombre limité de liaisons, la fragilité est portée par des goulots : la betweenness capture naturellement ce motif. Sur \texttt{two\_triangles\_bridge}, les métriques classiques corrèlent parfaitement avec $\Delta\mathrm{Eff}$ (Spearman $\approx 1$), tandis que la current-flow closeness reste élevée mais légèrement inférieure ($\approx 0.89$). Sur \texttt{two\_cliques\_two\_bridges}, current-flow closeness et betweenness sont très proches ($\approx 0.84$--$0.85$), ce qui illustre que la distance de résistance peut aussi repérer des nœuds critiques lorsque la redondance entre communautés est limitée.
+
+\paragraph{Réseaux très symétriques/maillés (\texttt{square\_with\_diagonals}).}
+Sur des graphes très petits et symétriques, l'impact $\Delta\mathrm{Eff}$ peut devenir (quasi) constant entre nœuds, ce qui rend la corrélation de Spearman non définie (valeurs manquantes). Ce phénomène rappelle le cas empirique où $\Delta\mathrm{ConnPairs}$ est constant : une cible constante ne permet pas de départager les métriques, même si des différences locales existent.
+
+\paragraph{Lien avec le cas empirique.}
+Ces motifs aident à interpréter les résultats sur le réseau portuaire : l'absence de déconnexion mesurable en suppression unitaire indique un régime \og maillé/robuste \fg{} où la fragilité observée est surtout continue (captée par $\Delta\mathrm{Eff}$). Dans ce régime, la proximité entre current-flow closeness et strength (cas nominal et sous sparsification modérée) suggère que la distance de résistance capte une notion de centralité compatible avec les intensités de flux, sans supplanter systématiquement les baselines.
+
+\subsection{Études de cas (nœuds)}
+Nous illustrons ici, sur le cas empirique, quelques profils typiques de nœuds critiques. Les identifiants (\texttt{portXXXX}) correspondent aux nœuds du graphe portuaire agrégé; les impacts sont évalués par la cible nominale $\Delta\mathrm{Eff}$.
+
+\paragraph{Cas 1 : nœud à impact maximal (\texttt{port1201}).}
+\texttt{port1201} est le nœud le plus critique selon $\Delta\mathrm{Eff}$ (rang 1; $\Delta\mathrm{Eff}\approx 3.0\times 10^4$). Il est également très haut dans les classements \texttt{cf\_closeness} (rang 2), betweenness (rang 3) et strength (rang 4). Ce profil correspond à un nœud \og central \fg{} à la fois au sens des flux (strength) et au sens de la connectivité effective multi-chemins (current-flow), ce qui explique l'accord entre familles de métriques.
+
+\paragraph{Cas 2 : accord complet des métriques (\texttt{port276}).}
+\texttt{port276} est un exemple où toutes les métriques pointent vers la même criticité : il est rang 1 en strength, rang 1 en betweenness et rang 1 en \texttt{cf\_closeness}, avec un impact élevé ($\Delta\mathrm{Eff}$ rang 3; $\approx 1.0\times 10^4$). Ce type de nœud combine un rôle de hub (fort volume agrégé) et une position structurelle sur de nombreux chemins courts, donc sa suppression dégrade fortement l'accessibilité moyenne.
+
+\paragraph{Cas 3 : nœud \og bridge-like \fg{} (betweenness forte) (\texttt{port1070}).}
+\texttt{port1070} illustre un nœud critique surtout par sa position (betweenness rang 5) plutôt que par son poids de flux (strength rang 22). Son impact reste substantiel ($\Delta\mathrm{Eff}$ rang 10). Ce profil est cohérent avec un goulot structurel reliant des zones du graphe : la betweenness l'identifie très tôt, tandis que des métriques plus \og flux \fg{} peuvent le sous-estimer.
+
+\paragraph{Cas 4 : criticité \og multi-chemins \fg{} (current-flow) (\texttt{port816}).}
+\texttt{port816} présente une \texttt{cf\_closeness} élevée (rang 16) tout en ayant une betweenness plus modeste (rang 48), avec un impact non négligeable ($\Delta\mathrm{Eff}$ rang 21). Ce type de cas illustre l'intérêt conceptuel de la distance de résistance : un nœud peut être bien placé pour la connectivité effective sans apparaître sur un grand nombre de plus courts chemins, car son rôle se manifeste via la redondance de plusieurs itinéraires alternatifs.
+
+\noindent Remarque. Ces cas sont cohérents avec la lecture globale : en régime nominal, strength et current-flow closeness tendent à être proches en performance, tandis que la betweenness excelle surtout pour des profils de type goulot.
+
+\subsection{Interprétation SCRM (ce que cela implique)}
+Les résultats précédents s'interprètent comme une aide à la décision structurelle pour le SCRM : ils ne prédisent pas des volumes futurs ni des pertes de service, mais proposent une manière de prioriser des nœuds à surveiller ou à renforcer, selon la notion de fragilité retenue.
+
+\paragraph{Deux lectures complémentaires : performance vs rupture.}
+Dans le cas empirique nominal, la fragilité observée est principalement une dégradation graduelle de l'accessibilité (cible $\Delta\mathrm{Eff}$) plutôt qu'une rupture de connectivité mesurable en suppression unitaire (cible $\Delta\mathrm{ConnPairs}$ constante). Pour le SCRM, cela correspond à des scénarios où le réseau continue de \og fonctionner \fg{} mais avec des trajets plus coûteux/longs et une moindre redondance. Les actions de mitigation associées relèvent davantage du renforcement de capacité et de la diversification que de la prévention d'une fragmentation immédiate.
+
+\paragraph{Que faire des classements.}
+Sur le réseau portuaire, le fait que \texttt{cf\_closeness} (distance de résistance) soit très proche de la \texttt{strength} en performance suggère que :
+\begin{itemize}
+  \item une politique de mitigation \og hub-driven \fg{} (prioriser les nœuds à fort flux agrégé) est déjà très efficace pour réduire la perte moyenne d'accessibilité en cas de retrait;
+  \item la current-flow closeness peut toutefois servir de complément pour repérer des nœuds structurellement bien placés au regard de la connectivité effective multi-chemins, y compris lorsque la betweenness (plus-court-chemin) ne les classe pas en tête (cas de nœuds \og multi-chemins \fg{}).
+\end{itemize}
+De manière pratique, cela se traduit par une stratégie \og en portefeuille \fg{} : sélectionner un ensemble de nœuds critiques comme l'union des top-$k$ selon strength, betweenness et \texttt{cf\_closeness}, puis orienter les audits (fiabilité, capacité, cybersécurité, plans de contingence) et les investissements (redondance, contractualisation alternative, flexibilité) sur cet ensemble.
+
+\paragraph{Stress tests comme scénarios SCRM.}
+Lorsque l'objectif SCRM est d'évaluer des risques de rupture (perte de connectivité), les stress tests (sparsification, focalisation sur points d'articulation lorsqu'ils existent) doivent être compris comme des scénarios de dégradation : perte de liaisons faibles, réduction de capacité, contraintes opérationnelles plus strictes. Ils ne décrivent pas nécessairement l'état nominal, mais ils permettent de tester si une métrique reste informative dans des contextes où des goulots émergent.
+
+\paragraph{De la lecture structurelle à des recommandations opérationnelles.}
+Pour transformer ces classements en recommandations SCRM actionnables, il faudrait enrichir le modèle avec (i) des poids plus interprétables (temps, capacité, fiabilité), (ii) des contraintes de substitution/reconfiguration, et (iii) des scénarios multi-perturbations (chocs simultanés). Néanmoins, même dans ce cadre structurel, l'analyse apporte une première hiérarchisation des nœuds à impact systémique, et une comparaison transparente entre familles de métriques.
+
+\section{Limitations et conclusion}
+
+\subsection{Limitations}
+Ce travail propose une évaluation structurelle des nœuds critiques, et plusieurs limites découlent directement des choix de modélisation et des contraintes de calcul.
+\begin{itemize}
+  \item Structure vs dynamique SCRM. Les cibles \og neutral \fg{} ($\Delta\mathrm{Eff}$, $\Delta\mathrm{ConnPairs}$) mesurent une fragilité topologique après suppression, mais ne modélisent pas explicitement des mécanismes opérationnels (stocks, capacités, substitutions, délais de récupération, politiques de sourcing) ni des cascades temporelles. Les résultats doivent donc être interprétés comme une lecture infrastructure de la criticité.
+
+  \item Projection non orientée. Les métriques basées sur la distance de résistance sont calculées sur une version symétrisée du réseau. Cette simplification perd l'asymétrie amont/aval des flux, potentiellement centrale en supply chains; une extension naturelle est d'étudier des formulations dirigées (ou des modèles multi-couches).
+
+  \item Choix des poids et mapping résistance. Sur le cas portuaire, on utilise un proxy basé sur les intensités de flux ($r_{ij}=1/(flow_{ij}+\varepsilon)$). Ce choix est plausible (lien fort $\leftrightarrow$ connectivité effective élevée) mais non unique : les conclusions peuvent varier selon le mapping (temps, capacité, fiabilité) et la qualité des données.
+
+  \item Vérité de référence approximée, et neutralité relative. Pour rester calculable à grande échelle, $\Delta\mathrm{Eff}$ est estimée par échantillonnage de sources, et la vérité par retrait est évaluée sur un sous-ensemble de nœuds candidats (top degré/betweenness, etc.). Cela réduit le coût, mais peut biaiser l'évaluation vers des nœuds déjà \og suspects \fg{} selon des métriques classiques. De plus, $\Delta\mathrm{Eff}$ partage une primitive de plus courts chemins avec certaines métriques (betweenness), ce qui justifie l'usage complémentaire de $\Delta\mathrm{ConnPairs}$ quand elle est discriminante.
+
+  \item Déconnexion rare en nominal et limites des stress tests. Sur des réseaux très redondants, $\Delta\mathrm{ConnPairs}$ peut être constant (souvent nul) pour des retraits unitaires. Des stress tests (points d'articulation lorsqu'ils existent, sparsification) peuvent augmenter les chances d'observer une fragilité par déconnexion, mais ne la garantissent pas : dans les essais rapportés, $\Delta\mathrm{ConnPairs}$ est resté constant même sous sparsification modérée, ce qui limite les conclusions que l'on peut tirer sur la criticité par fragmentation au niveau de suppressions unitaires.
+
+  \item Scalabilité des métriques basées sur la distance de résistance. Le calcul de $C_{\mathrm{cf\text{-}clo}}$ repose sur une décomposition spectrale du Laplacien (exacte, mais coûteuse si la taille augmente fortement). Des approximations laplaciennes (solveurs, landmarks, échantillonnage de paires) seraient nécessaires pour des graphes beaucoup plus grands.
+\end{itemize}
+
+\subsection{Conclusion et perspectives}
+Cette étude répond à la question \og Dans quelle mesure des métriques de criticité basées sur la distance de résistance capturent-elles la fragilité ou la robustesse structurelle des nœuds et des routes d’un réseau de supply chain, comparées aux centralités graphiques classiques aujourd’hui utilisées en SCRM ? \fg{} en montrant que l'apport des métriques basées sur la distance de résistance dépend du régime de fragilité observable dans le réseau et dans le protocole de perturbation.
+
+\paragraph{}
+Sur le cas empirique portuaire et dans un protocole de suppression unitaire de nœuds, la fragilité se manifeste principalement comme une dégradation graduelle de l'accessibilité : le réseau reste connecté, mais perd en efficacité ($\Delta\mathrm{Eff}$). Dans ce régime, la current-flow closeness (distance de résistance) fournit un classement fortement aligné avec l'impact structurel mesuré par $\Delta\mathrm{Eff}$ (Spearman $\approx 0.87$), à un niveau comparable à une baseline directement liée aux flux (strength, Spearman $\approx 0.88$), tandis que eigenvector et betweenness restent informatives. Il en ressort que la distance de résistance constitue, dans ce dataset et ce protocole, une alternative crédible et un complément aux centralités classiques, sans amélioration systématique sur un proxy de flux.
+
+La dimension fragilité par déconnexion (fragmentation mesurée par $\Delta\mathrm{ConnPairs}$) n'apparaît pas discriminante dans les exécutions nominales : $\Delta\mathrm{ConnPairs}$ est resté constant sur les nœuds testés, et la sparsification modérée rapportée n'a pas suffi à faire émerger des ruptures en suppression unitaire. La partie \og déconnexion \fg{} de la question doit donc être interprétée comme non concluante dans ce cadre (perturbation unitaire), ce qui est cohérent avec un réseau très redondant au niveau de la connexité.
+
+\paragraph{Implications pour la SCRM.}
+Dans un régime nominal où la fragilité est continue plutôt que rupturiste, l'analyse suggère une priorisation en portefeuille : combiner des indicateurs \og flux \fg{} (strength), \og goulots \fg{} (betweenness) et une lecture \og multi-chemins \fg{} (current-flow closeness) pour identifier des nœuds à fort impact potentiel sur l'efficacité et la redondance structurelle, sans prétendre modéliser la dynamique complète (stocks, capacités, replanification).
+
+\paragraph{Perspectives.}
+Plusieurs extensions permettraient de traiter explicitement la fragilité par fragmentation et d'améliorer la pertinence SCRM :
+\begin{itemize}
+  \item Perturbations plus sévères. Tester des scénarios multi-nœuds (attaques ciblées/simultanées), des suppressions conditionnelles (ex. contraintes de capacité), ou des sparsifications plus fortes afin de rendre $\Delta\mathrm{ConnPairs}$ discriminante.
+  \item Poids plus interprétables. Remplacer/compléter le mapping par flux par des proxies de temps, capacité et fiabilité (et conduire une analyse de sensibilité) pour relier plus directement les scores à des leviers SCRM.
+  \item Orientation et multi-couches. Étudier des formulations dirigées (amont/aval) et/ou multi-couches (maritime, hinterland, industrie) afin de capturer des asymétries et des dépendances structurantes.
+  \item Échelle et approximations. Déployer des méthodes approchées (solveurs laplaciens, landmarks, échantillonnage) pour étendre les métriques de distance de résistance à des graphes plus grands ou à des évaluations plus exhaustives.
+  \item Criticité d'arêtes. Étendre l'analyse à des liaisons (arêtes) avec une vérité de référence dédiée, lorsque des données de liaisons et de capacité le permettent.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
+
+
