@@ -1,0 +1,29 @@
+.DS_Store
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Python / general
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+
+# Data / generated artifacts
+**/lanceDB*/
+**/*.lance/
+**/*.txn
+**/data/artifacts/
+

@@ -1,0 +1,17 @@
+BeautifulSoup4
+#codecs
+Flask
+#json
+lancedb
+ollama
+pandas
+pathlib
+#re
+requests
+requests_html
+sanitize_filename
+selenium
+torch
+torchaudio
+torchvision
+transformers

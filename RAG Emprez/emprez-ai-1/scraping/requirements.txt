@@ -1,0 +1,7 @@
+requests
+BeautifulSoup4
+selenium
+sanitize_filename
+json
+codecs
+requests_html

@@ -1,0 +1,44 @@
+# Données (générées par l'application)
+data/
+*.json
+!requirements.txt
+
+# Images (générées par l'application)
+data/images/
+*.png
+*.jpg
+*.jpeg
+*.dcm
+*.dicom
+
+# Modèle (peut être volumineux, à exclure ou inclure selon vos besoins)
+# model.h5
+
+# Fichiers temporaires
+temp_uploads/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environnements virtuels
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+.venv/
+

@@ -1,0 +1,7 @@
+ollama
+nltk
+pandas
+lancedb
+torch 
+torchvision 
+torchaudio
