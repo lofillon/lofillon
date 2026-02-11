@@ -9,37 +9,9 @@ This document explains:
 
 ---
 
-## Streamlit UI — tweakable parameters
-
-The Streamlit UI (`src/impactlens/ui/streamlit_app.py`) exposes a set of sidebar inputs you can change to control what gets fetched/processed and how much context the extractor sees.
-
-### Run identifiers
-
-- Project ID: World Bank project identifier (e.g., `P131765`).
-- Dataset version (YYYY-MM-DD): logical run/version id used to separate outputs under `data/…`.
-
-### WDS ingestion
-
-- rows: how many document records to request from the World Bank WDS API.
-- max_pages: pagination depth for WDS queries.
-
-### Selection & processing
-
-- top_k_docs: how many top-ranked documents to select for the project.
-- docs_limit (download/OCR cap): maximum number of PDFs to download/process.
-- Process all project documents: if enabled, processes the full set (slower, more complete).
-- ocr_min_total_chars: threshold controlling how aggressively OCR fallback is applied when extracted text is short.
-
-### LLM extraction
-
-- max_chunks: maximum number of evidence chunks passed into extraction.
-- Analysis mode (`fast` / `full`): speed/coverage trade-off.
-
----
-
 ## Data sources and why “mismatches” happen
 
-ImpactLens is commonly used with World Bank project records, which are generally trustworthy. Still, it is normal to encounter fields that look “wrong” for analysis—not because they’re intentionally false, but because they are stale, incomplete, or inconsistent across sources.
+This project has been coded around World Bank project records, which are generally trustworthy. Still, it is normal to encounter fields that look “wrong” for analysis—not because they’re intentionally false, but because they are stale, incomplete, or inconsistent across sources.
 
 Common causes:
 
@@ -49,7 +21,7 @@ Common causes:
 - Data quality/formatting issues: missing values, duplicates, coding changes (sector/country), and parsing/normalization artifacts can make fields appear incorrect.
 - Narrative vs. structured fields: PDFs often contain qualitative claims or targets that later get revised, superseded, or interpreted differently in structured reporting.
 
-Because teams may not keep every system perfectly aligned day-to-day, occasional mismatches between structured APIs, the project webpage, and PDF narratives are expected. An evidence-linked summary helps surface these mismatches so you can review them explicitly rather than silently averaging them away.
+Because teams may not keep every system perfectly aligned day-to-day, occasional mismatches between structured APIs, the project webpage, and PDF narratives are expected. The report helps surface these mismatches so you can review them explicitly rather than silently averaging them away.
 
 ---
 
@@ -60,11 +32,9 @@ ImpactLens produces an evidence-linked summary of a World Bank project by combin
 - structured project/document metadata (what exists, where it came from), and
 - claims extracted from PDFs (what the documents say), each anchored with citations.
 
-The output is not just a narrative summary. It is a traceable evidence map:
+The output is a traceable evidence map:
 
 source documents → extracted claims → citations → report
-
-This is why the core object is best thought of as a fact set with provenance.
 
 ---
 
@@ -119,7 +89,7 @@ This turns the output into something you can treat as:
 
 2. Rank/select documents
    
-   Prefer high-signal doc types (implementation reports, results frameworks, PAD/ISR/ICR-style docs). The goal is to reduce noise and focus on documents likely to contain indicators and performance reporting.
+   Prefer high-signal doc types (implementation reports, results frameworks, PAD/ISR/ICR-style docs). The goal is to reduce noise and focus on documents likely to contain indicators and performance reporting. But you can retrieve all files from a project.
 
 3. Extract evidence chunks from PDFs
    
@@ -145,7 +115,7 @@ This turns the output into something you can treat as:
 
 ## Grounding by citations: what is validated
 
-ImpactLens uses a simple but powerful grounding rule: a citation is only accepted if the quoted text is found inside the referenced chunk.
+ImpactLens uses a grounding rule: a citation is only accepted if the quoted text is found inside the referenced chunk.
 
 The validation logic (`src/impactlens/validation.py`) normalizes whitespace and then performs an inclusion check:
 
@@ -167,36 +137,6 @@ Additionally, the validator enforces “non-null field → at least one citation
 - numeric/date facts (`NumericFact`)
 
 Downstream report rendering (see `src/impactlens/pipelines/build_report.py`) uses these validation signals plus `insufficient_evidence` to mark items as Not confirmed.
-
----
-
-## How you should use it in your analysis
-
-Depending on your goal:
-
-- Quantitative cross-project analysis
-  - Use `results_indicators` (baseline/target/achieved + year/unit).
-  - Filter to items with strong evidence and consistent units.
-
-- Qualitative / thematic analysis
-  - Use `objective`, `theory_of_change`, `risks_and_limitations`.
-  - Code themes and compare patterns across sectors/countries.
-  - Use citations to support interpretations and to identify where narrative claims come from.
-
-- Evidence quality / transparency analysis
-  - Use citation coverage and `insufficient_evidence` to measure:
-    - which projects report measurable indicators,
-    - which do not,
-    - and where documents are weak or absent.
-
----
-
-## What you need to provide (conceptually) for good results
-
-- A set of projects you care about (project IDs)
-- A clear question (“performance vs targets?”, “risk themes?”, “what works?”, etc.)
-- Enough high-quality documents per project (implementation/results reporting docs are key)
-- A model capable of schema-following (so the extraction remains consistent)
 
 ---
 
@@ -282,7 +222,7 @@ Costs:
 
 Motivation:
 
-- manage the time/cost/coverage trade-off
+- manage the time/cost/coverage trade-off (in response to smaller projects that contained 1 or 2 files that took the LLM the same amount of time than large projects)
   - `fast`: exploration and thin corpora
   - `full`: deeper coverage when you can afford more passes/context
 

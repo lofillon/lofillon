@@ -1,6 +1,6 @@
-# ImpactLens
+# Module for analysis, robustness assessment, and reporting based on structured and unstructured data (on public World Bank projects)
 
-ImpactLens is a local analytics and reporting module designed to transform messy, mixed-format program data into decision-ready outputs. It combines structured metadata (e.g., project records) with unstructured evidence (PDF reports, annexes, and scanned documents) to extract key facts, summarize outcomes, and produce standardized reports—while enforcing quality assurance and evidence grounding to minimize inconsistencies and hallucinations.
+This project, named ImpactLens for simplicity reasons, is a local analytics and reporting module designed to transform messy, mixed-format program data into decision-ready outputs. It combines structured metadata (e.g., project records) with unstructured evidence (PDF reports, annexes, and scanned documents) to extract key facts, summarize outcomes, and produce standardized reports—while enforcing quality assurance and evidence grounding to minimize inconsistencies and hallucinations.
 
 ## How to use this project is found [here](./How_to_analyse_and_interpret.md).
 
@@ -12,7 +12,6 @@ ImpactLens is a local analytics and reporting module designed to transform messy
 - A small FastAPI service:
   - `POST /projects/{project_id}/extract`
   - `GET /projects/{project_id}/report`
-
 
 
 ## Datasets / Sources
@@ -87,6 +86,35 @@ impactlens api
 ```
 
 Open `http://127.0.0.1:8000/docs`.
+
+
+## How to use the Streamlit UI
+
+The Streamlit UI (`src/impactlens/ui/streamlit_app.py`) exposes a set of sidebar inputs you can change to control what gets fetched/processed and how much context the extractor sees.
+
+### Run identifiers
+
+- Project ID: World Bank project identifier (e.g., `P131765`).
+- Dataset version (YYYY-MM-DD): logical run/version id used to separate outputs under `data/…`.
+
+### WDS ingestion
+
+- rows: how many document records to request from the World Bank WDS API.
+- max_pages: pagination depth for WDS queries.
+
+### Selection & processing
+
+- top_k_docs: how many top-ranked documents to select for the project.
+- docs_limit (download/OCR cap): maximum number of PDFs to download/process.
+- Process all project documents: if enabled, processes the full set (slower, more complete).
+- ocr_min_total_chars: threshold controlling how aggressively OCR fallback is applied when extracted text is short.
+
+### LLM extraction
+
+- max_chunks: maximum number of evidence chunks passed into extraction.
+- Analysis mode (`fast` / `full`): speed/coverage trade-off.
+
+---
 
 ## Run the pipeline (CLI, step-by-step)
 
