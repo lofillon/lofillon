@@ -12,7 +12,6 @@ This project, named ImpactLens for simplicity reasons, is a local analytics and 
   - `GET /projects/{project_id}/report`
 
 
-
 ## Datasets / Sources
 
 - World Bank Projects & Operations (Projects Search API v2): `https://search.worldbank.org/api/v2/projects`
@@ -85,6 +84,35 @@ impactlens api
 ```
 
 Open `http://127.0.0.1:8000/docs`.
+
+
+## How to use the Streamlit UI
+
+The Streamlit UI (`src/impactlens/ui/streamlit_app.py`) exposes a set of sidebar inputs you can change to control what gets fetched/processed and how much context the extractor sees.
+
+### Run identifiers
+
+- Project ID: World Bank project identifier (e.g., `P131765`).
+- Dataset version (YYYY-MM-DD): logical run/version id used to separate outputs under `data/…`.
+
+### WDS ingestion
+
+- rows: how many document records to request from the World Bank WDS API.
+- max_pages: pagination depth for WDS queries.
+
+### Selection & processing
+
+- top_k_docs: how many top-ranked documents to select for the project.
+- docs_limit (download/OCR cap): maximum number of PDFs to download/process.
+- Process all project documents: if enabled, processes the full set (slower, more complete).
+- ocr_min_total_chars: threshold controlling how aggressively OCR fallback is applied when extracted text is short.
+
+### LLM extraction
+
+- max_chunks: maximum number of evidence chunks passed into extraction.
+- Analysis mode (`fast` / `full`): speed/coverage trade-off.
+
+---
 
 ## Run the pipeline (CLI, step-by-step)
 
