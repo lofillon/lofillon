@@ -9,6 +9,51 @@ This document explains:
 
 ---
 
+## The pipeline’s analysis steps
+
+1. Scope
+   
+   Pick a project (or set of projects) and assemble its relevant public documents.
+
+2. Rank/select documents
+   
+   Prefer high-signal doc types (implementation reports, results frameworks, PAD/ISR/ICR-style docs). The goal is to reduce noise and focus on documents likely to contain indicators and performance reporting. But you can retrieve all files from a project.
+
+3. Extract evidence chunks from PDFs
+   
+   Convert PDFs into page-level (or chunk-level) text, using OCR fallback for scanned content. This creates an “evidence corpus” per project.
+
+4. Prioritize informative chunks
+   
+   Focus on pages likely to contain indicator tables, numeric targets, key dates, and “results section” content (conceptually: information density).
+
+5. LLM-based structured extraction
+   
+   Use a locally hosted LLM to populate a strict schema using only the provided evidence chunks, producing a JSON fact set.
+
+6. Grounding and consistency checks
+   
+   Validate that citations are supported by the evidence chunks; flag missing citations or unsupported quotes.
+
+7. Decision-ready report generation
+   
+   Render the fact set into a readable report for humans, preserving “not confirmed” markings where appropriate.
+
+---
+
+## What output it produces
+
+ImpactLens produces an evidence-linked summary of a World Bank project by combining:
+
+- structured project/document metadata (what exists, where it came from), and
+- claims extracted from PDFs (what the documents say), each anchored with citations.
+
+The output is a traceable evidence map:
+
+source documents → extracted claims → citations → report
+
+---
+
 ## Data sources and why “mismatches” happen
 
 This project has been coded around World Bank project records, which are generally trustworthy. Still, it is normal to encounter fields that look “wrong” for analysis—not because they’re intentionally false, but because they are stale, incomplete, or inconsistent across sources.
@@ -22,19 +67,6 @@ Common causes:
 - Narrative vs. structured fields: PDFs often contain qualitative claims or targets that later get revised, superseded, or interpreted differently in structured reporting.
 
 Because teams may not keep every system perfectly aligned day-to-day, occasional mismatches between structured APIs, the project webpage, and PDF narratives are expected. The report helps surface these mismatches so you can review them explicitly rather than silently averaging them away.
-
----
-
-## What ImpactLens produces (the analytical output)
-
-ImpactLens produces an evidence-linked summary of a World Bank project by combining:
-
-- structured project/document metadata (what exists, where it came from), and
-- claims extracted from PDFs (what the documents say), each anchored with citations.
-
-The output is a traceable evidence map:
-
-source documents → extracted claims → citations → report
 
 ---
 
@@ -78,38 +110,6 @@ This turns the output into something you can treat as:
 
 - a structured dataset (indicators, values, years, units), and
 - a linked audit trail (citations) for QA and reproducibility.
-
----
-
-## The pipeline’s actual “analysis” steps (conceptual)
-
-1. Scope
-   
-   Pick a project (or set of projects) and assemble its relevant public documents.
-
-2. Rank/select documents
-   
-   Prefer high-signal doc types (implementation reports, results frameworks, PAD/ISR/ICR-style docs). The goal is to reduce noise and focus on documents likely to contain indicators and performance reporting. But you can retrieve all files from a project.
-
-3. Extract evidence chunks from PDFs
-   
-   Convert PDFs into page-level (or chunk-level) text, using OCR fallback for scanned content. This creates an “evidence corpus” per project.
-
-4. Prioritize informative chunks
-   
-   Focus on pages likely to contain indicator tables, numeric targets, key dates, and “results section” content (conceptually: information density).
-
-5. LLM-based structured extraction
-   
-   Use a locally hosted LLM to populate a strict schema using only the provided evidence chunks, producing a JSON fact set.
-
-6. Grounding and consistency checks
-   
-   Validate that citations are supported by the evidence chunks; flag missing citations or unsupported quotes.
-
-7. Decision-ready report generation
-   
-   Render the fact set into a readable report for humans, preserving “not confirmed” markings where appropriate.
 
 ---
 
