@@ -1,4 +1,4 @@
-## ImpactLens — Analysis method and limitations (evidence-grounded LLM + OCR)
+## Analysis method and limitations (evidence-grounded LLM + OCR)
 
 This document explains:
 
