@@ -140,7 +140,7 @@ Downstream report rendering (see `src/impactlens/pipelines/build_report.py`) use
 
 ---
 
-## LLM extraction + grounding by citations — strengths vs. limitations (translated and integrated)
+## LLM extraction + grounding by citations — strengths vs. limitations
 
 ### The central challenge
 
@@ -167,7 +167,7 @@ The core challenge is to extract useful facts (numbers, dates, objectives, risks
 
 ---
 
-## Key limitations and failure modes (what to expect)
+## Key limitations and failure modes
 
 ### 1) Schema rigidity and extraction “fragility”
 
@@ -246,7 +246,7 @@ Limitations:
 
 ---
 
-## Validation boundaries (what the grounding validation does *not* cover)
+## Validation boundaries (what the grounding validation does not cover)
 
 ### A) Validation is “string matching”, not semantic reasoning
 
@@ -281,15 +281,18 @@ Grounding reduces unsourced hallucinations, but it does not automatically:
 
 ---
 
-## Why this design is still a good choice
+## Final words
 
 Despite the limits, this grounding approach is:
 
-- cheap (deterministic checks)
+- cheap (deterministic checks) and runs easily on a laptop
 - reproducible (same inputs → same validation)
 - high-impact against the most critical LLM risk in document analysis: unsourced hallucinations
 
 It also produces actionable downstream signals (e.g., “not confirmed” coverage, citation support rate, and validation issue counts) that can be tracked over time.
+
+Improvements like adding new readable file types (excels, word, emails) will definitely be added. Making it an agnostic analyzer (not just tuned to World Bank projects) is the main goal behind this project.
+Tests must also be conducted to assess whether reports are all accurate and complete. The demo has been verified.
 
 ---
 
