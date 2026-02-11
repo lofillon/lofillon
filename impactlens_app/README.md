@@ -2,6 +2,8 @@
 
 ImpactLens is a local analytics and reporting module designed to transform messy, mixed-format program data into decision-ready outputs. It combines structured metadata (e.g., project records) with unstructured evidence (PDF reports, annexes, and scanned documents) to extract key facts, summarize outcomes, and produce standardized reports—while enforcing quality assurance and evidence grounding to minimize inconsistencies and hallucinations.
 
+## How to use this project is found [here](./How_to_analyse_and_interpret.md).
+
 ## What you get
 
 - A bronze/silver/gold-style local data layout (Parquet + manifests)
